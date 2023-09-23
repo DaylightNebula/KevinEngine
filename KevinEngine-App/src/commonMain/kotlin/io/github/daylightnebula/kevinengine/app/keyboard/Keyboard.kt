@@ -18,12 +18,17 @@ private val listeners: MutableMap<String, Pair<Boolean, (key: Key, event: KeyEve
 )
 
 // internal function to call listeners
-internal fun callKeyListeners(key: Key, event: KeyEvent) = listeners.forEach { name, (repeatFlag, callback) ->
+internal fun callKeyListeners(key: Key, event: KeyEvent) = listeners.forEach { entry ->
+    // unpack entry
+    val name = entry.key
+    val repeatFlag = entry.value.first
+    val callback = entry.value.second
+
     if (event != KeyEvent.Repeated || repeatFlag)
         try {
             callback(key, event)
         } catch (ex: Exception) {
-            System.err.println("Error occurred in keyboard callback $name")
+            println("Error occurred in keyboard callback $name")
             ex.printStackTrace()
         }
 }

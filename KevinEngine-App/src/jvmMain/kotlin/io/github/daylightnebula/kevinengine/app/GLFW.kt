@@ -13,10 +13,10 @@ import org.lwjgl.glfw.GLFW.*
 import java.lang.Thread.sleep
 import kotlin.properties.Delegates
 
-abstract class GLFWApp {
-    abstract fun start()
-    abstract fun update(delta: Float)
-    abstract fun stop()
+actual interface App {
+    actual fun start()
+    actual fun update(delta: Float)
+    actual fun stop()
 }
 
 var frameTargetMS: Long? = null
@@ -24,16 +24,12 @@ var deltaSeconds = 0f
 var windowID by Delegates.notNull<Long>()
     private set
 
-fun stopApp() { glfwSetWindowShouldClose(windowID, true) }
+actual fun stopApp() { glfwSetWindowShouldClose(windowID, true) }
 fun setTargetFrameMS(targetMS: Long?) { frameTargetMS = targetMS }
 
-fun glfwApp(
-    winName: String,
-    app: GLFWApp,
-    width: Int = 1280,
-    height: Int = 720,
-    decorated: Boolean = true,
-    maximized: Boolean = false
+actual fun app(
+    info: AppInfo,
+    app: App
 ) {
     glfwSetErrorCallback { error, description -> println("GLFW error $error: $description") }
 
@@ -41,10 +37,10 @@ fun glfwApp(
     if (!glfwInit()) throw RuntimeException("Failed to initialize glfw!")
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-    glfwWindowHint(GLFW_DECORATED, decorated.toGLFW())
-    glfwWindowHint(GLFW_MAXIMIZED, maximized.toGLFW())
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, true.toGLFW())
-    windowID = glfwCreateWindow(width, height, winName, 0, 0)
+    glfwWindowHint(GLFW_DECORATED, info.nativeInfo.decorated.toGLFW())
+    glfwWindowHint(GLFW_MAXIMIZED, info.nativeInfo.maximized.toGLFW())
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, info.nativeInfo.windowTransparent.toGLFW())
+    windowID = glfwCreateWindow(info.nativeInfo.initWidth, info.nativeInfo.initHeight, info.winName, 0, 0)
 
     // setup window
     glfwMakeContextCurrent(windowID)

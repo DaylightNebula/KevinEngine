@@ -25,11 +25,13 @@ private val mouseListeners: MutableMap<String, (event: MouseEvent) -> Unit> = mu
 fun addMouseListener(name: String, callback: (event: MouseEvent) -> Unit) { mouseListeners[name] = callback }
 fun removeMouseListener(name: String) = mouseListeners.remove(name)
 
-private fun callListeners(event: MouseEvent) = mouseListeners.forEach { name, callback ->
+private fun callListeners(event: MouseEvent) = mouseListeners.forEach { entry ->
+    val name = entry.key
+    val callback = entry.value
     try {
         callback(event)
     } catch (ex: Exception) {
-        System.err.println("Error occurred in mouse event callback $name")
+        println("Error occurred in mouse event callback $name")
         ex.printStackTrace()
     }
 }
