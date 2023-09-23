@@ -1,6 +1,12 @@
 package io.github.daylightnebula.kevengine.opengl
 
+import org.joml.Matrix4f
+import org.joml.Vector2f
+import org.joml.Vector3f
+import org.joml.Vector4f
 import org.lwjgl.opengl.GL20.*
+import java.lang.IllegalArgumentException
+import java.nio.FloatBuffer
 import kotlin.system.exitProcess
 
 class Shader(val path: String, val type: Int) {
@@ -37,13 +43,22 @@ class Shader(val path: String, val type: Int) {
         }
     }
 }
-class ShaderProgram(val name: String, vertexShaderPath: String, fragmentShaderPath: String) {
+
+class ShaderProgram(
+    val name: String,
+    vertexShaderPath: String,
+    fragmentShaderPath: String,
+    private val uniformsList: List<String> = listOf()
+) {
     // id of this shader program
     private var id = -1
 
     // individual shaders
     private val vertexShader = Shader(vertexShaderPath, GL_VERTEX_SHADER)
     private val fragmentShader = Shader(fragmentShaderPath, GL_FRAGMENT_SHADER)
+
+    // uniforms
+    private val uniforms = hashMapOf<String, Int>()
 
     val isInitialized: Boolean
         get() = id != -1
@@ -87,5 +102,28 @@ class ShaderProgram(val name: String, vertexShaderPath: String, fragmentShaderPa
         glDetachShader(id, fragID)
         glDeleteShader(vertID)
         glDeleteShader(fragID)
+
+        // load uniforms
+        uniformsList.forEach { uniform ->
+            uniforms[uniform] = glGetUniformLocation(id, uniform)
+        }
     }
+
+    // functions for uniforms
+    fun getUniforms(): HashMap<String, Int> {
+        if (!isInitialized) generate()
+        return uniforms
+    }
+    fun getUniform(name: String): Int = getUniforms()[name]
+        ?: throw IllegalArgumentException("No uniform with name $name registered!")
+    fun setUniformFloat(name: String, value: Float) =
+        glUniform1f(getUniform(name), value)
+    fun setUniformVec2(name: String, value: Vector2f) =
+        glUniform2f(getUniform(name), value.x, value.y)
+    fun setUniformVec3(name: String, value: Vector3f) =
+        glUniform3f(getUniform(name), value.x, value.y, value.z)
+    fun setUniformVec4(name: String, value: Vector4f) =
+        glUniform4f(getUniform(name), value.x, value.y, value.z, value.w)
+    fun setUniformMat4(name: String, value: Matrix4f) =
+        glUniformMatrix4fv(getUniform(name), false, value.get(FloatArray(16)))
 }
