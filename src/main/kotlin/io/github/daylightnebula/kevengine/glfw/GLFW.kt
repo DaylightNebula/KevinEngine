@@ -7,11 +7,14 @@ import io.github.daylightnebula.kevengine.glfw.mouse.MouseButton
 import io.github.daylightnebula.kevengine.glfw.mouse.triggerMouseButton
 import io.github.daylightnebula.kevengine.glfw.mouse.triggerMouseEnter
 import io.github.daylightnebula.kevengine.glfw.mouse.triggerMouseMoveEvent
+import org.lwjgl.glfw.*
+import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWCursorEnterCallback
-import org.lwjgl.glfw.GLFWCursorPosCallback
-import org.lwjgl.glfw.GLFWKeyCallback
-import org.lwjgl.glfw.GLFWMouseButtonCallback
+import org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions
+import org.lwjgl.glfw.GLFWVulkan.nglfwGetRequiredInstanceExtensions
+import org.lwjgl.opengl.GL11.GL_TRUE
+import org.lwjgl.system.MemoryUtil.memAllocPointer
+import java.awt.SystemColor.window
 import java.lang.Thread.sleep
 import kotlin.properties.Delegates
 
@@ -29,10 +32,28 @@ var windowID by Delegates.notNull<Long>()
 fun stopApp() { glfwSetWindowShouldClose(windowID, true) }
 fun setTargetFrameMS(targetMS: Long?) { frameTargetMS = targetMS }
 
-fun glfwApp(winName: String, app: GLFWApp, width: Int = 1280, height: Int = 720) {
+fun glfwApp(
+    winName: String,
+    app: GLFWApp,
+    width: Int = 1280,
+    height: Int = 720,
+    decorated: Boolean = true,
+    maximized: Boolean = false
+) {
+    glfwSetErrorCallback { error, description -> println("GLFW error $error: $description") }
+
     // initialize and create window
     if (!glfwInit()) throw RuntimeException("Failed to initialize glfw!")
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+    glfwWindowHint(GLFW_DECORATED, decorated.toGLFW())
+    glfwWindowHint(GLFW_MAXIMIZED, maximized.toGLFW())
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, true.toGLFW())
     windowID = glfwCreateWindow(width, height, winName, 0, 0)
+
+    // setup window
+    glfwMakeContextCurrent(windowID)
+    glfwSwapInterval(1)
 
     // setup inputs
     glfwSetKeyCallback(windowID, object: GLFWKeyCallback() {
@@ -62,6 +83,9 @@ fun glfwApp(winName: String, app: GLFWApp, width: Int = 1280, height: Int = 720)
         }
     })
 
+    // show window
+    glfwShowWindow(windowID)
+
     // call app start
     app.start()
 
@@ -86,6 +110,7 @@ fun glfwApp(winName: String, app: GLFWApp, width: Int = 1280, height: Int = 720)
         deltaSeconds = (System.currentTimeMillis() - timer).coerceAtLeast(0) / 1000f
 
         // poll events
+        glfwSwapBuffers(windowID)
         glfwPollEvents()
     }
 
@@ -93,6 +118,10 @@ fun glfwApp(winName: String, app: GLFWApp, width: Int = 1280, height: Int = 720)
     app.stop()
 
     // remove window
+    glfwFreeCallbacks(windowID)
     glfwDestroyWindow(windowID)
     glfwTerminate()
 }
+
+// help extensions functions
+fun Boolean.toGLFW(): Int = if (this) GLFW_TRUE else GLFW_FALSE

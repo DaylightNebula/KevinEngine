@@ -20,8 +20,9 @@ repositories {
 dependencies {
     lwjgl {
         version = Release.`3_3_2`
-        implementation(Lwjgl.Preset.minimalVulkan)
+        implementation(Lwjgl.Preset.minimalOpenGL)
     }
+    implementation("org.joml:joml:1.10.5")
 
     testImplementation(kotlin("test"))
 }
