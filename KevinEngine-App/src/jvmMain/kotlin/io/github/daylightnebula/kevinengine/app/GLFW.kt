@@ -49,12 +49,12 @@ actual fun app(
     // setup inputs
     glfwSetKeyCallback(windowID, object: GLFWKeyCallback() {
         override fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-            callKeyListeners(Key.values()[scancode], KeyEvent.values()[action])
+            if (scancode < Key.entries.size) callKeyListeners(Key.entries[scancode], KeyEvent.entries[action])
         }
     })
     glfwSetMouseButtonCallback(windowID, object: GLFWMouseButtonCallback() {
         override fun invoke(window: Long, button: Int, action: Int, mods: Int) {
-            triggerMouseButton(MouseButton.values()[button], action == GLFW_PRESS)
+            triggerMouseButton(MouseButton.entries[button], action == GLFW_PRESS)
         }
     })
     glfwSetCursorPosCallback(windowID, object: GLFWCursorPosCallback() {

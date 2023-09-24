@@ -11,8 +11,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/KevinEngine-App" />
-            <option value="$PROJECT_DIR$/KevinEngine-Renderer-OpenGL" />
-            <option value="$PROJECT_DIR$/KevinEngine-Test-App" />
           </set>
         </option>
       </GradleProjectSettings>
