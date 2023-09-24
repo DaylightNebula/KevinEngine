@@ -1,83 +1,110 @@
-1 	ESC
-2 	1
-3 	2
-4 	3
-5 	4
-6 	5
-7 	6
-8 	7
-9 	8
-10 	9
-11 	0
-12 	-
-13 	=
-14 	bs
-15 	Tab
-16 	Q
-17 	W
-18 	E
-19 	R
-20 	T
-21 	Y
-22 	U
-23 	I
-24 	O
-25 	P
-26 	[
-27 	]
-28 	Enter
-29 	CTRL
-30 	A
-31 	S
-32 	D
-33 	F
-34 	G
-35 	H
-36 	J
-37 	K
-38 	L
-39 	;
-40 	'
-41 	`
-42 	LShift
-43 	\
-44 	Z
-45 	X
-46 	C
-47 	V
-48 	B
-49 	N
-50 	M
-51 	,
-52 	.
-53 	/
-54 	RShift
-55 	PrtSc
-56 	Alt
-57 	Space
-58 	Caps
-59 	F1
-60 	F2
-61 	F3
-62 	F4
-63 	F5
-64 	F6
-65 	F7
-66 	F8
-67 	F9
-68 	F10
-69 	Num
-70 	Scroll
-71 	Home (7)
-72 	Up (8)
-73 	PgUp (9)
-74 	-
-75 	Left (4)
-76 	Center (5)
-77 	Right (6)
-78 	+
-79 	End (1)
-80 	Down (2)
-81 	PgDn (3)
-82 	Ins
-83 	Del
+0x0001 	"Escape" 	"Escape"
+0x0002 	"Digit1" 	"Digit1"
+0x0003 	"Digit2" 	"Digit2"
+0x0004 	"Digit3" 	"Digit3"
+0x0005 	"Digit4" 	"Digit4"
+0x0006 	"Digit5" 	"Digit5"
+0x0007 	"Digit6" 	"Digit6"
+0x0008 	"Digit7" 	"Digit7"
+0x0009 	"Digit8" 	"Digit8"
+0x000A 	"Digit9" 	"Digit9"
+0x000B 	"Digit0" 	"Digit0"
+0x000C 	"Minus" 	"Minus"
+0x000D 	"Equal" 	"Equal"
+0x000E 	"Backspace" 	"Backspace"
+0x000F 	"Tab" 	"Tab"
+0x0010 	"KeyQ" 	"KeyQ"
+0x0011 	"KeyW" 	"KeyW"
+0x0012 	"KeyE" 	"KeyE"
+0x0013 	"KeyR" 	"KeyR"
+0x0014 	"KeyT" 	"KeyT"
+0x0015 	"KeyY" 	"KeyY"
+0x0016 	"KeyU" 	"KeyU"
+0x0017 	"KeyI" 	"KeyI"
+0x0018 	"KeyO" 	"KeyO"
+0x0019 	"KeyP" 	"KeyP"
+0x001A 	"BracketLeft" 	"BracketLeft"
+0x001B 	"BracketRight" 	"BracketRight"
+0x001C 	"Enter" 	"Enter"
+0x001D 	"ControlLeft" 	"ControlLeft"
+0x001E 	"KeyA" 	"KeyA"
+0x001F 	"KeyS" 	"KeyS"
+0x0020 	"KeyD" 	"KeyD"
+0x0021 	"KeyF" 	"KeyF"
+0x0022 	"KeyG" 	"KeyG"
+0x0023 	"KeyH" 	"KeyH"
+0x0024 	"KeyJ" 	"KeyJ"
+0x0025 	"KeyK" 	"KeyK"
+0x0026 	"KeyL" 	"KeyL"
+0x0027 	"Semicolon" 	"Semicolon"
+0x0028 	"Quote" 	"Quote"
+0x0029 	"Backquote" 	"Backquote"
+0x002A 	"ShiftLeft" 	"ShiftLeft"
+0x002B 	"Backslash" 	"Backslash"
+0x002C 	"KeyZ" 	"KeyZ"
+0x002D 	"KeyX" 	"KeyX"
+0x002E 	"KeyC" 	"KeyC"
+0x002F 	"KeyV" 	"KeyV"
+0x0030 	"KeyB" 	"KeyB"
+0x0031 	"KeyN" 	"KeyN"
+0x0032 	"KeyM" 	"KeyM"
+0x0033 	"Comma" 	"Comma"
+0x0034 	"Period" 	"Period"
+0x0035 	"Slash" 	"Slash"
+0x0036 	"ShiftRight" 	"ShiftRight"
+0x0037 	"NumpadMultiply" 	"NumpadMultiply"
+0x0038 	"AltLeft" 	"AltLeft"
+0x0039 	"Space" 	"Space"
+0x003A 	"CapsLock" 	"CapsLock"
+0x003B 	"F1" 	"F1"
+0x003C 	"F2" 	"F2"
+0x003D 	"F3" 	"F3"
+0x003E 	"F4" 	"F4"
+0x003F 	"F5" 	"F5"
+0x0040 	"F6" 	"F6"
+0x0041 	"F7" 	"F7"
+0x0042 	"F8" 	"F8"
+0x0043 	"F9" 	"F9"
+0x0044 	"F10" 	"F10"
+0x0045 	"Pause" 	"Pause"
+0x0046 	"ScrollLock" 	"ScrollLock"
+0x0047 	"Numpad7" 	"Numpad7"
+0x0048 	"Numpad8" 	"Numpad8"
+0x0049 	"Numpad9" 	"Numpad9"
+0x004A 	"NumpadSubtract" 	"NumpadSubtract"
+0x004B 	"Numpad4" 	"Numpad4"
+0x004C 	"Numpad5" 	"Numpad5"
+0x004D 	"Numpad6" 	"Numpad6"
+0x004E 	"NumpadAdd" 	"NumpadAdd"
+0x004F 	"Numpad1" 	"Numpad1"
+0x0050 	"Numpad2" 	"Numpad2"
+0x0051 	"Numpad3" 	"Numpad3"
+0x0052 	"Numpad0" 	"Numpad0"
+0x0053 	"NumpadDecimal" 	"NumpadDecimal"
+0x0054	"PrintScreen"
+0x0055 	"Unidentified" 	""
+0x0056 	"IntlBackslash" 	"IntlBackslash"
+0x0057 	"F11" 	"F11"
+0x0058 	"F12" 	"F12"
+0x0059 	"NumpadEqual" 	"NumpadEqual" (was "" prior to Chrome 48)
+0x005A 	"Unidentified" 	""
+0x005B 	"Unidentified" 	"" (was "F13" prior to Chrome 48)
+0x005C 	"Unidentified" 	"" (was "F14" prior to Chrome 48)
+0x005D 	"Unidentified" 	"" (was "F15" prior to Chrome 48)
+0x005E 	"Unidentified" 	""
+0x005F 	"Unidentified" 	""
+0x0060 	"Unidentified" 	""
+0x0061 	"Unidentified" 	""
+0x0062 	"Unidentified" 	""
+0x0063 	"Unidentified" 	"" (was "F16" prior to Chrome 48)
+0x0064 	"F13" 	"F13" (was "F17" prior to Chrome 48)
+0x0065 	"F14" 	"F14" (was "F18" prior to Chrome 48)
+0x0066 	"F15" 	"F15" (was "F19" prior to Chrome 48)
+0x0067 	"F16" 	"F16" (was "F20" prior to Chrome 48)
+0x0068 	"F17" 	"F17" (was "F21" prior to Chrome 48)
+0x0069 	"F18" 	"F18" (was "F22" prior to Chrome 48)
+0x006A 	"F19" 	"F19" (was "F23" prior to Chrome 48)
+0x006B 	"F20" 	"F20" (was "F24" prior to Chrome 48)
+0x006C 	"F21" 	"F21" (was "" prior to Chrome 48)
+0x006D 	"F22" 	"F22" (was "" prior to Chrome 48)
+0x006E 	"F23" 	"F23" (was "" prior to Chrome 48)

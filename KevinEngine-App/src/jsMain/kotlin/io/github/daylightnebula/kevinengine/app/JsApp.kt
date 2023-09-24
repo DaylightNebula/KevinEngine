@@ -23,29 +23,8 @@ actual fun app(info: AppInfo, app: App) {
     // add the key listeners
     document.addEventListener("keydown", { it ->
         val event = it as? KeyboardEvent ?: throw IllegalArgumentException("Keydown event was not a keyboard event!")
-        event.key
-        val keyString = when(event.key) {
-            " " -> "KEY_SPACE"
-            "Shift" -> "KEY_LSHIFT"
-            "Alt" -> "KEY_LMENU"
-            "Control" -> "KEY_LCONTROL"
-            "PageUp" -> "KEY_NEXT"
-            "PageDown" -> "KEY_BACK"
-            "Os" -> "KEY_SYSRQ"
-            "ArrowUp" -> "KEY_UP"
-            "ArrowDown" -> "KEY_DOWN"
-            "ArrowLeft" -> "KEY_LEFT"
-            "ArrowRight" -> "KEY_RIGHT"
-            "\\" -> "KEY_BACKSLASH"
-            "/" -> "KEY_SLASH"
-            "," -> "KEY_COMMA"
-            "." -> "KEY_PERIOD"
-            "`" -> "KEY_GRAVE"
-            else -> "KEY_${event.key.uppercase()}"
-        }
-        println("Key down ${event.key} = $keyString")
-        val key = Key.valueOf(keyString)
-        println("Found key $key")
+        val key = Key.entries[convertStringCodeToKeyCode(event.code)]
+        println("Key $key from code ${event.code} ${event.keyCode}")
     })
 
     // start the app
