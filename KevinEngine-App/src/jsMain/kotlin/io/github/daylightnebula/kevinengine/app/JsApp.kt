@@ -24,7 +24,6 @@ actual fun app(info: AppInfo, app: App) {
     document.addEventListener("keydown", { it ->
         val event = it as? KeyboardEvent ?: throw IllegalArgumentException("Keydown event was not a keyboard event!")
         val key = Key.entries[convertStringCodeToKeyCode(event.code)]
-        println("Key $key from code ${event.code} ${event.keyCode}")
     })
 
     // start the app

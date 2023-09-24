@@ -5,10 +5,7 @@ import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
 import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.app.mouse.addMouseListener
 
-val info = AppInfo(
-    "KevinEngine",
-    NativeInfo()
-)
+val info = AppInfo("KevinEngine")
 
 fun main() = app(info, object: App {
     override fun start() {

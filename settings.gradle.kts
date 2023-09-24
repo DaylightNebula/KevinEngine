@@ -11,5 +11,5 @@ pluginManagement {
 
 rootProject.name = "KevinEngine"
 include(":KevinEngine-App")
-//include(":KevinEngine-Renderer-OpenGL")
+include(":KevinEngine-Renderer")
 //include(":KevinEngine-Test-App")

@@ -1,5 +1,6 @@
-package io.github.daylightnebula.kevinengine.renderer.opengl
+package io.github.daylightnebula.kevinengine.renderer
 
+import io.github.daylightnebula.kevinengine.renderer.ShaderType
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -8,19 +9,25 @@ import org.lwjgl.opengl.GL20.*
 import java.lang.IllegalArgumentException
 import kotlin.system.exitProcess
 
-class Shader(val path: String, val type: Int) {
+actual class Shader actual constructor(actual val path: String, actual val type: ShaderType) {
     private var id = -1
 
+    actual val isInitialized: Boolean
+        get() = id != -1
+
     // get above id, however, if id is -1 (uninitialized), call generate
-    fun get(): Int {
-        if (id == -1) generate()
+    actual fun get(): Int {
+        if (id == -1) load()
         return id
     }
 
     // function generates shader from resource path above
-    fun generate() {
+    actual fun load() {
         // create new shader
-        id = glCreateShader(type)
+        id = glCreateShader(when (type) {
+            ShaderType.VERTEX -> GL_VERTEX_SHADER
+            ShaderType.FRAGMENT -> GL_FRAGMENT_SHADER
+        })
 
         // load shader
         val code = Shader::class.java.getResource(path)?.readText()
@@ -43,33 +50,33 @@ class Shader(val path: String, val type: Int) {
     }
 }
 
-class ShaderProgram(
-    val name: String,
-    vertexShaderPath: String,
-    fragmentShaderPath: String,
-    private val uniformsList: List<String> = listOf()
+actual class ShaderProgram actual constructor(
+    actual val name: String,
+    vertexPath: String,
+    fragmentPath: String,
+    actual val uniformsList: List<String>
 ) {
     // id of this shader program
     private var id = -1
 
     // individual shaders
-    private val vertexShader = Shader(vertexShaderPath, GL_VERTEX_SHADER)
-    private val fragmentShader = Shader(fragmentShaderPath, GL_FRAGMENT_SHADER)
+    private val vertexShader = Shader(vertexPath, ShaderType.VERTEX)
+    private val fragmentShader = Shader(fragmentPath, ShaderType.FRAGMENT)
 
     // uniforms
     private val uniforms = hashMapOf<String, Int>()
 
-    val isInitialized: Boolean
+    actual val isInitialized: Boolean
         get() = id != -1
 
     // function that returns the above id, if the id is -1 (uninitialized), the generate function is called first
-    fun get(): Int {
-        if (id == -1) generate()
+    actual fun get(): Int {
+        if (id == -1) load()
         return id
     }
 
     // function to generate this shader program
-    fun generate() {
+    actual fun load() {
         println("Generating shader program!")
 
         // get shader ids
@@ -110,7 +117,7 @@ class ShaderProgram(
 
     // functions for uniforms
     fun getUniforms(): HashMap<String, Int> {
-        if (!isInitialized) generate()
+        if (!isInitialized) load()
         return uniforms
     }
     fun getUniform(name: String): Int = getUniforms()[name]
