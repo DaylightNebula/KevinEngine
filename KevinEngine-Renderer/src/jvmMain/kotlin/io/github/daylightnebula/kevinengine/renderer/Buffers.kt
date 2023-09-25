@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL15.*
 actual class Buffer actual constructor(actual val inputs: FloatArray) {
     private var id = -1
 
-    val length = inputs.size
+    actual val length = inputs.size
 
     actual val isInitialized: Boolean
         get() = id != -1
@@ -19,7 +19,7 @@ actual class Buffer actual constructor(actual val inputs: FloatArray) {
     }
 
     actual fun load() {
-        glGenBuffers()
+        id = glGenBuffers()
         glBindBuffer(GL_ARRAY_BUFFER, id)
         glBufferData(GL_ARRAY_BUFFER, inputs, GL_STATIC_DRAW)
     }

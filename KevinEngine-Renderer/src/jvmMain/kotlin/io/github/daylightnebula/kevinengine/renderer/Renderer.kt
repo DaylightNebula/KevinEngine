@@ -28,19 +28,26 @@ actual fun drawing(internal: () -> Unit) {
     glFlush()
 }
 
-actual fun attachBuffer(index: Int, buffer: Buffer) {
+// attaches the given buffer to be rendered
+actual fun attachBuffer(name: String, index: Int, buffer: Buffer) {
     // make sure vbo is initialized
     if (!buffer.isInitialized) buffer.load()
 
+    println("Start $name $index ${buffer.get()}")
     // render vbo
     glEnableVertexAttribArray(index)
     glBindBuffer(GL_ARRAY_BUFFER, buffer.get())
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
+    glVertexAttribPointer(index, 3, GL_FLOAT, false, 0, 0)
+    println("Stop $name $index")
 }
-actual fun drawBufferRaw(buffer: Buffer, type: RenderShapeType) = glDrawArrays(
+
+// draws the given buffer to the screen if it has been attached
+actual fun drawAttachedRaw(count: Int, type: RenderShapeType) = glDrawArrays(
     when(type) {
         RenderShapeType.QUADS -> GL_QUADS
         RenderShapeType.TRIANGLES -> GL_TRIANGLES
-    }, 0, buffer.length
+    }, 0, count
 )
+
+// detaches a given buffer index from the renderer
 actual fun detachBufferIndex(index: Int) = glDisableVertexAttribArray(index)

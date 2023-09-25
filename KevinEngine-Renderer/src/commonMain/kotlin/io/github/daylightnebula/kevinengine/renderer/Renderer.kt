@@ -8,6 +8,6 @@ expect fun drawing(internal: () -> Unit)
 
 enum class RenderShapeType { TRIANGLES, QUADS }
 
-expect fun attachBuffer(index: Int, buffer: Buffer)
-expect fun drawBufferRaw(buffer: Buffer, type: RenderShapeType)
+expect fun attachBuffer(name: String, index: Int, buffer: Buffer)
+expect fun drawAttachedRaw(count: Int, type: RenderShapeType)
 expect fun detachBufferIndex(index: Int)

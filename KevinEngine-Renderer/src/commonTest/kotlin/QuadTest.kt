@@ -8,7 +8,21 @@ import io.github.daylightnebula.kevinengine.renderer.*
 import kotlin.test.Test
 
 class QuadTest {
-    val quadPositionsBuffer = genBuffer(-1f, -1f, 0f, 1f, -1f, 0f, 1f, 1f, 0f, -1f, 1f, 0f)
+    val buffers = bufferCollection(
+        RenderShapeType.QUADS,
+        "positions" to genBuffer(
+            -1f, -1f, 0f,
+            1f, -1f, 0f,
+            1f, 1f, 0f,
+            -1f, 1f, 0f
+        ),
+        "colors" to genBuffer(
+            0.393f,  0.621f,  0.362f,
+            0.673f,  0.211f,  0.457f,
+            0.820f,  0.883f,  0.371f,
+            0.982f,  0.099f,  0.879f
+        )
+    )
     val scaleMatrix = Mat4.identity().scale(0.5f)
     val shader = ShaderProgram(
         "base",
@@ -31,9 +45,7 @@ class QuadTest {
 
         override fun update(delta: Float) = drawing {
             shader.setUniformMat4("matrix", scaleMatrix)
-            attachBuffer(0, quadPositionsBuffer)
-            drawBufferRaw(quadPositionsBuffer, RenderShapeType.QUADS)
-            detachBufferIndex(0)
+            buffers.render()
         }
 
         override fun stop() {}
