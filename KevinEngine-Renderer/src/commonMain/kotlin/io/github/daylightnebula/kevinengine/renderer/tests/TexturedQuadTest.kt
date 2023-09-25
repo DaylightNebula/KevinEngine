@@ -1,3 +1,5 @@
+package io.github.daylightnebula.kevinengine.renderer.tests
+
 import dev.romainguy.kotlin.math.Float4
 import dev.romainguy.kotlin.math.Mat4
 import io.github.daylightnebula.kevinengine.app.App
@@ -5,7 +7,6 @@ import io.github.daylightnebula.kevinengine.app.AppInfo
 import io.github.daylightnebula.kevinengine.app.app
 import io.github.daylightnebula.kevinengine.app.scale
 import io.github.daylightnebula.kevinengine.renderer.*
-import kotlin.test.Test
 
 class TexturedQuadTest {
     val buffers = bufferCollection(
@@ -37,8 +38,7 @@ class TexturedQuadTest {
         Float4(0f, 0f, 0f, 1f)
     )
 
-    @Test
-    fun testTexturedQuad() = app(info, object: App {
+    fun main() = app(info, object: App {
         override fun start() {
             setupRenderer(info)
             setShader(shader)

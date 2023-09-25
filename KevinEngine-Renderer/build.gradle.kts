@@ -18,10 +18,10 @@ dependencies {
 }
 
 kotlin {
-//    js {
-//        browser {}
-//        binaries.executable()
-//    }
+    js {
+        browser {}
+        binaries.executable()
+    }
     jvm()
 
     sourceSets {
