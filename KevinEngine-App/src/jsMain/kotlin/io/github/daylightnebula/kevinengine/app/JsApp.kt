@@ -1,6 +1,7 @@
 package io.github.daylightnebula.kevinengine.app
 
 import io.github.daylightnebula.kevinengine.app.keyboard.Key
+import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
 import io.github.daylightnebula.kevinengine.app.keyboard.callKeyListeners
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -21,9 +22,15 @@ actual fun stopApp() { shouldStop = true }
 // function for starting the app
 actual fun app(info: AppInfo, app: App) {
     // add the key listeners
+    document.addEventListener("keyup", { it ->
+        val event = it as? KeyboardEvent ?: throw IllegalArgumentException("Keydown event was not a keyboard event!")
+        val key = Key.entries[convertStringCodeToKeyCode(event.code)]
+        callKeyListeners(key, KeyEvent.Released)
+    })
     document.addEventListener("keydown", { it ->
         val event = it as? KeyboardEvent ?: throw IllegalArgumentException("Keydown event was not a keyboard event!")
         val key = Key.entries[convertStringCodeToKeyCode(event.code)]
+        callKeyListeners(key, KeyEvent.Pressed)
     })
 
     // start the app
