@@ -2,8 +2,10 @@ package io.github.daylightnebula.kevinengine.renderer
 
 import org.lwjgl.opengl.GL15.*
 
-actual class VBO actual constructor(actual val inputs: FloatArray) {
+actual class Buffer actual constructor(actual val inputs: FloatArray) {
     private var id = -1
+
+    val length = inputs.size
 
     actual val isInitialized: Boolean
         get() = id != -1
@@ -23,4 +25,4 @@ actual class VBO actual constructor(actual val inputs: FloatArray) {
     }
 }
 
-actual fun genVBO(vararg floats: Float) = VBO(floats)
+actual fun genBuffer(vararg floats: Float) = Buffer(floats)

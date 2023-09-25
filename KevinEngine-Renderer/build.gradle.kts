@@ -12,6 +12,9 @@ repositories {
 dependencies {
     commonMainImplementation(project(":KevinEngine-App"))
     commonMainImplementation("dev.romainguy:kotlin-math:1.5.3")
+    commonTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    commonTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    commonTestImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
 kotlin {

@@ -1,9 +1,9 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-expect class VBO(inputs: FloatArray) {
+expect class Buffer(inputs: FloatArray) {
     val inputs: FloatArray
     val isInitialized: Boolean
     fun load()
     fun get(): Int
 }
-expect fun genVBO(vararg floats: Float): VBO
+expect fun genBuffer(vararg floats: Float): Buffer

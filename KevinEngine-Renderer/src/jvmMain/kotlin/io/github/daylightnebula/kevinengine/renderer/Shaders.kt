@@ -1,5 +1,9 @@
 package io.github.daylightnebula.kevinengine.renderer
 
+import dev.romainguy.kotlin.math.Float2
+import dev.romainguy.kotlin.math.Float3
+import dev.romainguy.kotlin.math.Float4
+import dev.romainguy.kotlin.math.Mat4
 import io.github.daylightnebula.kevinengine.renderer.ShaderType
 import org.joml.Matrix4f
 import org.joml.Vector2f
@@ -116,20 +120,20 @@ actual class ShaderProgram actual constructor(
     }
 
     // functions for uniforms
-    fun getUniforms(): HashMap<String, Int> {
+    actual fun getUniforms(): Map<String, Int> {
         if (!isInitialized) load()
         return uniforms
     }
-    fun getUniform(name: String): Int = getUniforms()[name]
+    actual fun getUniform(name: String): Int = getUniforms()[name]
         ?: throw IllegalArgumentException("No uniform with name $name registered!")
-    fun setUniformFloat(name: String, value: Float) =
+    actual fun setUniformFloat(name: String, value: Float) =
         glUniform1f(getUniform(name), value)
-    fun setUniformVec2(name: String, value: Vector2f) =
+    actual fun setUniformVec2(name: String, value: Float2) =
         glUniform2f(getUniform(name), value.x, value.y)
-    fun setUniformVec3(name: String, value: Vector3f) =
+    actual fun setUniformVec3(name: String, value: Float3) =
         glUniform3f(getUniform(name), value.x, value.y, value.z)
-    fun setUniformVec4(name: String, value: Vector4f) =
+    actual fun setUniformVec4(name: String, value: Float4) =
         glUniform4f(getUniform(name), value.x, value.y, value.z, value.w)
-    fun setUniformMat4(name: String, value: Matrix4f) =
-        glUniformMatrix4fv(getUniform(name), false, value.get(FloatArray(16)))
+    actual fun setUniformMat4(name: String, value: Mat4) =
+        glUniformMatrix4fv(getUniform(name), false, value.toFloatArray())
 }

@@ -1,17 +1,16 @@
 package io.github.daylightnebula.kevinengine.renderer
 
 import dev.romainguy.kotlin.math.Float4
-import io.github.daylightnebula.kevinengine.app.App
-import io.github.daylightnebula.kevinengine.app.AppInfo
-import io.github.daylightnebula.kevinengine.app.NativeInfo
-import io.github.daylightnebula.kevinengine.app.app
+import dev.romainguy.kotlin.math.Mat4
+import io.github.daylightnebula.kevinengine.app.*
 
-val quad_position_buffer = genVBO(*floatArrayOf(-1f, -1f, 1f, -1f, 1f, 1f, -1f, 1f).map { it * 0.5f }.toFloatArray())
+val quad_position_buffer = genVBO(-1f, -1f, 0f, 1f, -1f, 0f, 1f, 1f, 0f, -1f, 1f, 0f)
+val scaleMatrix = Mat4.identity().scale(0.5f)
 val shader = ShaderProgram(
     "base",
     "/vert.glsl",
     "/frag.glsl",
-    listOf()
+    listOf("matrix")
 )
 
 val info = AppInfo(
@@ -25,6 +24,7 @@ fun main() = app(info, object: App {
         setShader(shader)
     }
     override fun update(delta: Float) = drawing {
+        shader.setUniformMat4("matrix", scaleMatrix)
         drawVBO(quad_position_buffer)
     }
 

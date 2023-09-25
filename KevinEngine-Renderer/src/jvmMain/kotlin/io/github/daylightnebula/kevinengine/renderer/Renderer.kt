@@ -35,7 +35,7 @@ actual fun drawVBO(vbo: VBO) {
     // render vbo
     glEnableVertexAttribArray(0)
     glBindBuffer(GL_ARRAY_BUFFER, vbo.get())
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0)
-    glDrawArrays(GL_QUADS, 0, 4)
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
+    glDrawArrays(GL_QUADS, 0, vbo.length)
     glDisableVertexAttribArray(0)
 }
