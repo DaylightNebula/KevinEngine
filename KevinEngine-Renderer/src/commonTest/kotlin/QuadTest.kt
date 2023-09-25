@@ -5,11 +5,10 @@ import io.github.daylightnebula.kevinengine.app.AppInfo
 import io.github.daylightnebula.kevinengine.app.app
 import io.github.daylightnebula.kevinengine.app.scale
 import io.github.daylightnebula.kevinengine.renderer.*
-import org.jetbrains.annotations.TestOnly
 import kotlin.test.Test
 
 class QuadTest {
-    val quad_position_buffer = genBuffer(-1f, -1f, 0f, 1f, -1f, 0f, 1f, 1f, 0f, -1f, 1f, 0f)
+    val quadPositionsBuffer = genBuffer(-1f, -1f, 0f, 1f, -1f, 0f, 1f, 1f, 0f, -1f, 1f, 0f)
     val scaleMatrix = Mat4.identity().scale(0.5f)
     val shader = ShaderProgram(
         "base",
@@ -32,7 +31,9 @@ class QuadTest {
 
         override fun update(delta: Float) = drawing {
             shader.setUniformMat4("matrix", scaleMatrix)
-            drawVBO(quad_position_buffer)
+            attachBuffer(0, quadPositionsBuffer)
+            drawBufferRaw(quadPositionsBuffer, RenderShapeType.QUADS)
+            detachBufferIndex(0)
         }
 
         override fun stop() {}

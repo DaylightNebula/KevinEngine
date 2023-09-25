@@ -28,14 +28,19 @@ actual fun drawing(internal: () -> Unit) {
     glFlush()
 }
 
-actual fun drawVBO(vbo: VBO) {
+actual fun attachBuffer(index: Int, buffer: Buffer) {
     // make sure vbo is initialized
-    if (!vbo.isInitialized) vbo.load()
+    if (!buffer.isInitialized) buffer.load()
 
     // render vbo
-    glEnableVertexAttribArray(0)
-    glBindBuffer(GL_ARRAY_BUFFER, vbo.get())
+    glEnableVertexAttribArray(index)
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get())
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0)
-    glDrawArrays(GL_QUADS, 0, vbo.length)
-    glDisableVertexAttribArray(0)
 }
+actual fun drawBufferRaw(buffer: Buffer, type: RenderShapeType) = glDrawArrays(
+    when(type) {
+        RenderShapeType.QUADS -> GL_QUADS
+        RenderShapeType.TRIANGLES -> GL_TRIANGLES
+    }, 0, buffer.length
+)
+actual fun detachBufferIndex(index: Int) = glDisableVertexAttribArray(index)
