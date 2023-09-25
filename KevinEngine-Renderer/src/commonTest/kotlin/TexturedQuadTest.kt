@@ -7,7 +7,7 @@ import io.github.daylightnebula.kevinengine.app.scale
 import io.github.daylightnebula.kevinengine.renderer.*
 import kotlin.test.Test
 
-class QuadTest {
+class TexturedQuadTest {
     val buffers = bufferCollection(
         RenderShapeType.QUADS,
         metadata("positions", 0, 3) to genBuffer(
@@ -16,28 +16,29 @@ class QuadTest {
             1f, 1f, 0f,
             -1f, 1f, 0f
         ),
-        metadata("colors", 1, 3) to genBuffer(
-            0.393f,  0.621f,  0.362f,
-            0.673f,  0.211f,  0.457f,
-            0.820f,  0.883f,  0.371f,
-            0.982f,  0.099f,  0.879f
+        metadata("colors", 1, 2) to genBuffer(
+            0f, 1f,
+            1f, 1f,
+            1f, 0f,
+            0f, 0f
         )
     )
     val scaleMatrix = Mat4.identity().scale(0.5f)
     val shader = ShaderProgram(
         "base",
-        "/quad_vert.glsl",
-        "/quad_frag.glsl",
-        listOf("matrix")
+        "/texquad_vert.glsl",
+        "/texquad_frag.glsl",
+        listOf("matrix", "tex0")
     )
+    val texture = Texture("/flowers.jpg")
 
     val info = AppInfo(
-        "KevinEngine-RendererTester",
+        "KevinEngine-RendererTesterTextured",
         Float4(0f, 0f, 0f, 1f)
     )
 
     @Test
-    fun testQuads() = app(info, object : App {
+    fun testTexturedQuad() = app(info, object: App {
         override fun start() {
             setupRenderer(info)
             setShader(shader)
@@ -45,6 +46,7 @@ class QuadTest {
 
         override fun update(delta: Float) = drawing {
             shader.setUniformMat4("matrix", scaleMatrix)
+            shader.setUniformTex("tex0", texture)
             buffers.render()
         }
 

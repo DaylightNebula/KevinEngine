@@ -136,4 +136,9 @@ actual class ShaderProgram actual constructor(
         glUniform4f(getUniform(name), value.x, value.y, value.z, value.w)
     actual fun setUniformMat4(name: String, value: Mat4) =
         glUniformMatrix4fv(getUniform(name), false, value.toFloatArray())
+    actual fun setUniformTex(name: String, value: Texture) {
+        glActiveTexture(GL_TEXTURE0)                // use texture unit 0
+        glBindTexture(GL_TEXTURE_2D, value.get())   // bind texture
+        glUniform1i(getUniform(name), 0)        // assign texture to texture unit 0
+    }
 }

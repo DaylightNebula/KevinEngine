@@ -30,4 +30,5 @@ expect class ShaderProgram(name: String, vertexPath: String, fragmentPath: Strin
     fun setUniformVec3(name: String, value: Float3)
     fun setUniformVec4(name: String, value: Float4)
     fun setUniformMat4(name: String, value: Mat4)
+    fun setUniformTex(name: String, value: Texture)
 }

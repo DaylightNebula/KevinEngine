@@ -1,17 +1,22 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-fun bufferCollection(renderShape: RenderShapeType, vararg buffers: Pair<String, Buffer>) =
+data class BufferMetadata(val name: String, val layoutIndex: Int, val infoCount: Int)
+fun metadata(name: String, layoutIndex: Int, infoCount: Int) = BufferMetadata(name, layoutIndex, infoCount)
+
+fun bufferCollection(renderShape: RenderShapeType, vararg buffers: Pair<BufferMetadata, Buffer>) =
     BufferCollection(renderShape, mapOf(*buffers))
 
-data class BufferCollection(val renderShape: RenderShapeType, private val buffers: Map<String, Buffer>) {
+data class BufferCollection(val renderShape: RenderShapeType, private val buffers: Map<BufferMetadata, Buffer>) {
     fun render() {
-        buffers.entries.forEachIndexed { index, (name, buffer) ->
-            println("Attaching $index with $name")
-            attachBuffer(name, index, buffer)
+        // attach buffers
+        buffers.entries.forEachIndexed { index, (metadata, buffer) ->
+            attachBuffer(index, metadata, buffer)
         }
-        val length = buffers.values.first().length
-        println("Length $length")
-        drawAttachedRaw(length, renderShape)
-        repeat(buffers.size) { i -> detachBufferIndex(i); println("Detaching $i") }
+
+        // draw attached
+        drawAttachedRaw(buffers.values.first().length, renderShape)
+
+        // detach buffers
+        repeat(buffers.size) { i -> detachBufferIndex(i) }
     }
 }
