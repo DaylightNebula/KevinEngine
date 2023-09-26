@@ -34,7 +34,9 @@ actual class Shader actual constructor(actual val path: String, actual val type:
                 }) ?: throw IllegalArgumentException("Failed to create shader for $path with type $type")
 
                 // attach source and compile
-                gl.shaderSource(shader, text)
+                val text2 = convertShaderWebGL(text, type)
+                println(text2)
+                gl.shaderSource(shader, text2)
                 gl.compileShader(shader)
 
                 loading = false
