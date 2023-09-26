@@ -6,10 +6,6 @@ import java.awt.image.BufferedImage
 import java.nio.ByteBuffer
 import javax.imageio.ImageIO
 
-actual fun provideFileBytes(path: String) =
-    object {}.javaClass.getResource(path)?.readBytes()
-        ?: throw IllegalArgumentException("Could not find anything on path $path")
-
 actual class Texture(val image: BufferedImage) {
     private var id = -1
 

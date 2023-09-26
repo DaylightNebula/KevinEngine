@@ -2,10 +2,10 @@ package io.github.daylightnebula.kevinengine.renderer.tests
 
 import dev.romainguy.kotlin.math.Float4
 import dev.romainguy.kotlin.math.Mat4
-import io.github.daylightnebula.kevinengine.app.App
-import io.github.daylightnebula.kevinengine.app.AppInfo
-import io.github.daylightnebula.kevinengine.app.app
-import io.github.daylightnebula.kevinengine.app.scale
+import io.github.daylightnebula.kevinengine.app.*
+import io.github.daylightnebula.kevinengine.app.keyboard.Key
+import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
+import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
 
 class TexturedQuadTest {
@@ -42,6 +42,10 @@ class TexturedQuadTest {
         override fun start() {
             setupRenderer(info)
             setShader(shader)
+
+            addKeyListener("esc_close") { key, event ->
+                if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
+            }
         }
 
         override fun update(delta: Float) = drawing {

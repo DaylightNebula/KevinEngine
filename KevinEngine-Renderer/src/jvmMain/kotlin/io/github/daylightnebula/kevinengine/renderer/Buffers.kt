@@ -24,5 +24,3 @@ actual class Buffer actual constructor(actual val inputs: FloatArray) {
         glBufferData(GL_ARRAY_BUFFER, inputs, GL_STATIC_DRAW)
     }
 }
-
-actual fun genBuffer(vararg floats: Float) = Buffer(floats)

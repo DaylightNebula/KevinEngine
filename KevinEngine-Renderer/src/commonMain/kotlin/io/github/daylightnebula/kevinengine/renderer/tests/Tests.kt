@@ -1,6 +1,7 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
 fun main() {
-    TexturedQuadTest().main()
+//    EmptyTest().main()
+//    TexturedQuadTest().main()
     QuadTest().main()
 }

@@ -7,4 +7,4 @@ expect class Buffer(inputs: FloatArray) {
     fun load()
     fun get(): Int
 }
-expect fun genBuffer(vararg floats: Float): Buffer
+fun genBuffer(vararg floats: Float) = Buffer(floats)
