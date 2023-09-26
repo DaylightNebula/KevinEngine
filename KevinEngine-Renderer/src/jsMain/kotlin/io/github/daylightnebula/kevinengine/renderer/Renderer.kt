@@ -2,7 +2,6 @@ package io.github.daylightnebula.kevinengine.renderer
 
 import io.github.daylightnebula.kevinengine.app.AppInfo
 import kotlinx.browser.document
-import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import org.khronos.webgl.WebGLRenderingContext as GL
 

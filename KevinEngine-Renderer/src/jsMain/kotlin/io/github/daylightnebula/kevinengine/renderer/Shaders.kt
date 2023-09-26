@@ -139,8 +139,7 @@ actual class ShaderProgram actual constructor(actual val name: String, vertexPat
     actual fun setUniformTex(name: String, value: Texture) {
         if (!isInitialized) return
         gl.activeTexture(GL.TEXTURE0)                // use texture unit 0
-        TODO("Texture loading")
-//        gl.bindTexture(GL.TEXTURE_2D, value.get())   // bind texture
+        gl.bindTexture(GL.TEXTURE_2D, textures[value.get()])
         gl.uniform1i(getUniformLocation(name), 0)        // assign texture to texture unit 0
     }
 }
