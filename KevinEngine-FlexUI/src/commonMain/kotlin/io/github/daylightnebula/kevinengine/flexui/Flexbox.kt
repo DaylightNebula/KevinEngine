@@ -11,6 +11,7 @@ data class FlexboxDimensions(val x: Int, val y: Int, val width: Int, val height:
 enum class Alignment { START, CENTER, END }
 
 open class Flexbox(
+    val id: String? = null,
     val width: Val? = null,
     val height: Val? = null,
     val minWidth: Val = PercentVal(0f),
@@ -28,8 +29,8 @@ open class Flexbox(
 ) {
     // abstract functions
     private lateinit var dimensions: FlexboxDimensions
-    open var defaultWidth: Int = 0
-    open var defaultHeight: Int = 0
+    open var defaultWidth: Val = PxVal(0)
+    open var defaultHeight: Val = PxVal(0)
 
     // render
     open fun render(parent: FlexboxDimensions) {
@@ -44,36 +45,50 @@ open class Flexbox(
                 dimensions.height.toFloat() / windowDimensions.height,
                 1f
             ).translate(
-                (dimensions.x.toFloat() - (windowDimensions.width / 2)) / (windowDimensions.width / 2),
-                -((dimensions.y.toFloat() - (windowDimensions.height / 2)) / (windowDimensions.height / 2)),
+                dimensions.x.toFloat() / (windowDimensions.width / 2),
+                -dimensions.y.toFloat() / (windowDimensions.height / 2),
                 0f
             )
 
         // call render
         flexboxQuad.shader.setUniformMat4("matrix", matrix)
         flexboxQuad.shader.setUniformVec4("color", backgroundColor)
+        flexboxQuad.shader.setUniformVec4("borderColor", borderColor)
+        flexboxQuad.shader.setUniformVec4("border", Float4(
+            border.top.calculate(dimensions, Axis.VERTICAL).toFloat() / dimensions.height,
+            border.bottom.calculate(dimensions, Axis.VERTICAL).toFloat() / dimensions.height,
+            border.left.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
+            border.right.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
+        ))
         flexboxQuad.render()
+
+        // call children render
+        children.forEach { child ->
+            child.render(dimensions)
+        }
     }
 
     open fun recalculate(dimensions: FlexboxDimensions): FlexboxDimensions {
         // get target width and height
-        val targetWidth = (width?.calculate(dimensions, Axis.HORIZONTAL) ?: defaultWidth)
+        val targetWidth = ((width?.calculate(dimensions, Axis.HORIZONTAL) ?: defaultWidth.calculate(dimensions, Axis.HORIZONTAL))
+                + border.left.calculate(dimensions, Axis.HORIZONTAL) + border.right.calculate(dimensions, Axis.HORIZONTAL))
             .coerceAtLeast(minWidth.calculate(dimensions, Axis.HORIZONTAL))
             .coerceAtMost(maxWidth.calculate(dimensions, Axis.HORIZONTAL))
-        val targetHeight = (height?.calculate(dimensions, Axis.VERTICAL) ?: defaultHeight)
+        val targetHeight = ((height?.calculate(dimensions, Axis.VERTICAL) ?: defaultHeight.calculate(dimensions, Axis.VERTICAL))
+                + border.top.calculate(dimensions, Axis.VERTICAL) + border.bottom.calculate(dimensions, Axis.VERTICAL))
             .coerceAtLeast(minHeight.calculate(dimensions, Axis.VERTICAL))
             .coerceAtMost(maxHeight.calculate(dimensions, Axis.VERTICAL))
 
         // get target x and y based on alignment and above target dimensions
         val xOffset = when(horizontalAlignment) {
-            Alignment.START -> (targetWidth / 2) - if (targetWidth > dimensions.width) targetWidth - dimensions.width else 0
-            Alignment.END -> dimensions.width + (targetWidth / 2) - targetWidth
-            Alignment.CENTER -> dimensions.width / 2
+            Alignment.START -> -dimensions.width / 2 + (targetWidth / 2)
+            Alignment.END -> dimensions.width / 2 - (targetWidth / 2)
+            Alignment.CENTER -> 0
         }
         val yOffset = when(verticalAlignment) {
-            Alignment.START -> (targetHeight / 2) - if (targetHeight > dimensions.height) targetHeight - dimensions.height else 0
-            Alignment.END -> dimensions.height + (targetHeight / 2) - targetHeight
-            Alignment.CENTER -> dimensions.height / 2
+            Alignment.START -> -dimensions.height / 2 + (targetHeight / 2)
+            Alignment.END -> dimensions.height / 2 - (targetHeight / 2)
+            Alignment.CENTER -> 0
         }
 
         return FlexboxDimensions(dimensions.x + xOffset, dimensions.y + yOffset, targetWidth, targetHeight)
@@ -86,7 +101,7 @@ val flexboxQuad = bufferCollection(
         "flexbox",
         "/flexbox_vert.glsl",
         "/flexbox_frag.glsl",
-        listOf("matrix", "color")
+        listOf("matrix", "color", "border", "borderColor")
     ),
     RenderShapeType.QUADS,
     metadata("positions", 0, 3) to genBuffer(
@@ -94,5 +109,11 @@ val flexboxQuad = bufferCollection(
         1f, -1f, 0f,
         1f, 1f, 0f,
         -1f, 1f, 0f
+    ),
+    metadata("colors", 1, 2) to genBuffer(
+        0f, 1f,
+        1f, 1f,
+        1f, 0f,
+        0f, 0f
     )
 )

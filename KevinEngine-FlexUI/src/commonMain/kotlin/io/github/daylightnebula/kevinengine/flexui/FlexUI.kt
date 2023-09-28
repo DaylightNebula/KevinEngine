@@ -22,7 +22,17 @@ val root = Flexbox(
     width = PxVal(100),
     height = PxVal(100),
     horizontalAlignment = Alignment.CENTER,
-    verticalAlignment = Alignment.CENTER
+    verticalAlignment = Alignment.CENTER,
+    children = mutableListOf(
+        Flexbox(
+            width = PercentVal(0.5f),
+            height = PercentVal(0.5f),
+            border = Box.all(PxVal(2)),
+            horizontalAlignment = Alignment.CENTER,
+            verticalAlignment = Alignment.CENTER,
+            backgroundColor = Float4(1f, 0f, 0f, 1f)
+        )
+    )
 )
 val info = AppInfo("FlexUI - Test", Float4(0f, 0f, 0f, 1f))
 fun main() = app(info, object: App {
