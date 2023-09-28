@@ -9,7 +9,16 @@ import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
 
 class TexturedQuadTest {
+    val scaleMatrix = Mat4.identity().scale(0.5f)
+    val shader = ShaderProgram(
+        "base",
+        "/texquad_vert.glsl",
+        "/texquad_frag.glsl",
+        listOf("matrix", "tex0")
+    )
+    val texture = Texture("/flowers.jpg")
     val buffers = bufferCollection(
+        shader,
         RenderShapeType.QUADS,
         metadata("positions", 0, 3) to genBuffer(
             -1f, -1f, 0f,
@@ -24,14 +33,6 @@ class TexturedQuadTest {
             0f, 0f
         )
     )
-    val scaleMatrix = Mat4.identity().scale(0.5f)
-    val shader = ShaderProgram(
-        "base",
-        "/texquad_vert.glsl",
-        "/texquad_frag.glsl",
-        listOf("matrix", "tex0")
-    )
-    val texture = Texture("/flowers.jpg")
 
     val info = AppInfo(
         "KevinEngine-RendererTesterTextured",
@@ -41,7 +42,6 @@ class TexturedQuadTest {
     fun main() = app(info, object: App {
         override fun start() {
             setupRenderer(info)
-            setShader(shader)
 
             addKeyListener("esc_close") { key, event ->
                 if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()

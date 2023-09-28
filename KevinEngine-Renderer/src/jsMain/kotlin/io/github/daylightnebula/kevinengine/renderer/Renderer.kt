@@ -7,26 +7,16 @@ import org.khronos.webgl.WebGLRenderingContext as GL
 
 val canvas: HTMLCanvasElement = document.getElementById("glcanvas") as HTMLCanvasElement
 val gl: GL = canvas.getContext("webgl") as GL
-var currentShader: ShaderProgram? = null
 
 actual fun setupRenderer(info: AppInfo) {
     gl.clearColor(info.clearColor.x, info.clearColor.y, info.clearColor.z, info.clearColor.w)
 }
 
-actual fun setShader(shader: ShaderProgram?) {
-    currentShader = shader
-}
-
 actual fun drawing(internal: () -> Unit) {
-    // get an immutable reference to current shader, and make sure it is loaded
-    val shader = currentShader
-    if (shader != null && !shader.isInitialized) shader.load()
-
     // start render
     gl.clear(GL.COLOR_BUFFER_BIT or GL.DEPTH_BUFFER_BIT)
 
     // do render
-    if (shader != null && shader.isInitialized) gl.useProgram(shaderPrograms[shader.get()])
     internal()
 
     // end render
@@ -43,11 +33,21 @@ actual fun attachBuffer(index: Int, metadata: BufferMetadata, buffer: Buffer) {
     gl.vertexAttribPointer(metadata.layoutIndex, metadata.infoCount, GL.FLOAT, false, 0, 0)
 }
 
-actual fun drawAttachedRaw(count: Int, type: RenderShapeType) = gl.drawArrays(
-    when(type) {
-        RenderShapeType.QUADS -> GL.TRIANGLE_FAN
-        RenderShapeType.TRIANGLES -> GL.TRIANGLES
-    }, 0, count / 3
-)
+actual fun drawAttachedRaw(shader: ShaderProgram, count: Int, type: RenderShapeType) {
+    // if shader not initialized, load, otherwise, enable and draw
+    if (!shader.isInitialized) shader.load()
+    else {
+        // enable shader
+        gl.useProgram(shaderPrograms[shader.get()])
+
+        // draw arrays
+        gl.drawArrays(
+            when (type) {
+                RenderShapeType.QUADS -> GL.TRIANGLE_FAN
+                RenderShapeType.TRIANGLES -> GL.TRIANGLES
+            }, 0, count / 3
+        )
+    }
+}
 
 actual fun detachBufferIndex(index: Int) = gl.disableVertexAttribArray(index)

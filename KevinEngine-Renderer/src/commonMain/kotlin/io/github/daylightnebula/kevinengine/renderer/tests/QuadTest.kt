@@ -9,7 +9,15 @@ import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
 
 class QuadTest {
+    val scaleMatrix = Mat4.identity().scale(0.5f)
+    val shader = ShaderProgram(
+        "base",
+        "/quad_vert.glsl",
+        "/quad_frag.glsl",
+        listOf("matrix")
+    )
     val buffers = bufferCollection(
+        shader,
         RenderShapeType.QUADS,
         metadata("positions", 0, 3) to genBuffer(
             -1f, -1f, 0f,
@@ -24,13 +32,6 @@ class QuadTest {
             0.982f,  0.099f,  0.879f
         )
     )
-    val scaleMatrix = Mat4.identity().scale(0.5f)
-    val shader = ShaderProgram(
-        "base",
-        "/quad_vert.glsl",
-        "/quad_frag.glsl",
-        listOf("matrix")
-    )
 
     val info = AppInfo(
         "KevinEngine-RendererTester",
@@ -40,7 +41,6 @@ class QuadTest {
     fun main() = app(info, object : App {
         override fun start() {
             setupRenderer(info)
-            setShader(shader)
 
             addKeyListener("esc_close") { key, event ->
                 if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
