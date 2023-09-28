@@ -63,8 +63,14 @@ open class Flexbox(
         flexboxQuad.render()
 
         // call children render
+        val childDimensions = FlexboxDimensions(
+            dimensions.x,// + padding.left.calculate(dimensions, Axis.HORIZONTAL),
+            dimensions.y,// + padding.top.calculate(dimensions, Axis.VERTICAL),
+            dimensions.width - padding.left.calculate(dimensions, Axis.HORIZONTAL) - padding.right.calculate(dimensions, Axis.VERTICAL),
+            dimensions.height - padding.top.calculate(dimensions, Axis.VERTICAL) - padding.bottom.calculate(dimensions, Axis.VERTICAL)
+        )
         children.forEach { child ->
-            child.render(dimensions)
+            child.render(childDimensions)
         }
     }
 

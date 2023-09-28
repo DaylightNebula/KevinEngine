@@ -7,10 +7,13 @@ in vec2 UV;
 out vec4 outColor;
 
 void main() {
+    // draw border
     if (UV.y < border.x || UV.x < border.z || 1 - UV.y < border.y || 1 - UV.x < border.w) {
         outColor = borderColor;
         return;
     }
 
-    outColor = vec4(UV, 0, 1);
+    // send default if we made it this far
+    outColor = color;
+//    outColor = vec4(UV, 0, 1);
 }
