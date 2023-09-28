@@ -40,7 +40,7 @@ actual fun app(
     glfwWindowHint(GLFW_DECORATED, info.nativeInfo.decorated.toGLFW())
     glfwWindowHint(GLFW_MAXIMIZED, info.nativeInfo.maximized.toGLFW())
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, info.nativeInfo.windowTransparent.toGLFW())
-    windowID = glfwCreateWindow(info.nativeInfo.initWidth, info.nativeInfo.initHeight, info.winName, 0, 0)
+    windowID = glfwCreateWindow(info.width, info.height, info.winName, 0, 0)
 
     // setup window
     glfwMakeContextCurrent(windowID)
