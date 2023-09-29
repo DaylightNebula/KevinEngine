@@ -38,7 +38,6 @@ open class Flexbox(
         if (!this::dimensions.isInitialized) dimensions = recalculate(parent)
 
         // start building matrix
-        println("Dimensions $dimensions")
         val matrix = Mat4.identity()
             .scale(
                 dimensions.width.toFloat() / windowDimensions.width,
@@ -78,26 +77,40 @@ open class Flexbox(
         // get target width and height
         val targetWidth = ((width?.calculate(dimensions, Axis.HORIZONTAL) ?: defaultWidth.calculate(dimensions, Axis.HORIZONTAL))
                 + border.left.calculate(dimensions, Axis.HORIZONTAL) + border.right.calculate(dimensions, Axis.HORIZONTAL))
+//                + margin.left.calculate(dimensions, Axis.HORIZONTAL) + margin.right.calculate(dimensions, Axis.HORIZONTAL))
             .coerceAtLeast(minWidth.calculate(dimensions, Axis.HORIZONTAL))
-            .coerceAtMost(maxWidth.calculate(dimensions, Axis.HORIZONTAL))
+            .coerceAtMost(
+                maxWidth.calculate(dimensions, Axis.HORIZONTAL)
+                - margin.left.calculate(dimensions, Axis.HORIZONTAL)
+                - margin.right.calculate(dimensions, Axis.HORIZONTAL)
+            )
         val targetHeight = ((height?.calculate(dimensions, Axis.VERTICAL) ?: defaultHeight.calculate(dimensions, Axis.VERTICAL))
                 + border.top.calculate(dimensions, Axis.VERTICAL) + border.bottom.calculate(dimensions, Axis.VERTICAL))
             .coerceAtLeast(minHeight.calculate(dimensions, Axis.VERTICAL))
-            .coerceAtMost(maxHeight.calculate(dimensions, Axis.VERTICAL))
+            .coerceAtMost(
+                maxHeight.calculate(dimensions, Axis.VERTICAL)
+                    - margin.top.calculate(dimensions, Axis.VERTICAL)
+                    - margin.bottom.calculate(dimensions, Axis.VERTICAL)
+            )
 
         // get target x and y based on alignment and above target dimensions
         val xOffset = when(horizontalAlignment) {
-            Alignment.START -> -dimensions.width / 2 + (targetWidth / 2)
-            Alignment.END -> dimensions.width / 2 - (targetWidth / 2)
+            Alignment.START -> -dimensions.width / 2 + (targetWidth / 2) + margin.left.calculate(dimensions, Axis.HORIZONTAL)
+            Alignment.END -> dimensions.width / 2 - (targetWidth / 2) - margin.right.calculate(dimensions, Axis.HORIZONTAL)
             Alignment.CENTER -> 0
         }
         val yOffset = when(verticalAlignment) {
-            Alignment.START -> -dimensions.height / 2 + (targetHeight / 2)
-            Alignment.END -> dimensions.height / 2 - (targetHeight / 2)
+            Alignment.START -> -dimensions.height / 2 + (targetHeight / 2) + margin.top.calculate(dimensions, Axis.VERTICAL)
+            Alignment.END -> dimensions.height / 2 - (targetHeight / 2) - margin.bottom.calculate(dimensions, Axis.VERTICAL)
             Alignment.CENTER -> 0
         }
 
-        return FlexboxDimensions(dimensions.x + xOffset, dimensions.y + yOffset, targetWidth, targetHeight)
+        return FlexboxDimensions(
+            dimensions.x + xOffset,
+            dimensions.y + yOffset,
+            targetWidth,
+            targetHeight
+        )
     }
 }
 

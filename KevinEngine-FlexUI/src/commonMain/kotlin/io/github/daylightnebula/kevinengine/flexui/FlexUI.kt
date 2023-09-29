@@ -25,12 +25,12 @@ val root = Flexbox(
     verticalAlignment = Alignment.CENTER,
     children = mutableListOf(
         Flexbox(
-            width = PercentVal(1f),
-            height = PercentVal(1f),
+            width = PercentVal(0.25f),
+            height = PercentVal(0.25f),
             border = Box.all(PxVal(2)),
             horizontalAlignment = Alignment.CENTER,
             verticalAlignment = Alignment.CENTER,
-            margin = Box.all(PercentVal(0.25f)),
+            margin = Box.axis(PercentVal(0.25f), PercentVal(0.25f)),
             backgroundColor = Float4(1f, 0f, 0f, 1f)
         )
     )
