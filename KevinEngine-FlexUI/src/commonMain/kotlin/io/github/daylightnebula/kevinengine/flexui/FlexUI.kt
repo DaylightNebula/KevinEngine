@@ -19,19 +19,30 @@ fun renderFlexbox(box: Flexbox, info: AppInfo) {
 }
 
 val root = Flexbox(
-    width = PxVal(100),
-    height = PxVal(100),
-    horizontalAlignment = Alignment.CENTER,
-    verticalAlignment = Alignment.CENTER,
+    width = PercentVal(0.25f),
+    height = PercentVal(0.25f),
+//    padding = Box.all(PxVal(10)),
+    horizontalAlignment = Alignment.START,
+    verticalAlignment = Alignment.START,
+    childrenDirection = FlexDirection.COLUMN,
     children = mutableListOf(
         Flexbox(
-            width = PercentVal(0.25f),
-            height = PercentVal(0.25f),
-            border = Box.all(PxVal(2)),
-            horizontalAlignment = Alignment.CENTER,
-            verticalAlignment = Alignment.CENTER,
-            margin = Box.axis(PercentVal(0.25f), PercentVal(0.25f)),
+            width = PxVal(60),
+            height = PxVal(60),
+            border = Box.all(PxVal(1)),
             backgroundColor = Float4(1f, 0f, 0f, 1f)
+        ),
+//        Flexbox(
+//            width = PxVal(60),
+//            height = PxVal(60),
+//            border = Box.all(PxVal(1)),
+//            backgroundColor = Float4(0f, 1f, 0f, 1f)
+//        ),
+        Flexbox(
+            width = PxVal(60),
+            height = PxVal(60),
+            border = Box.all(PxVal(1)),
+            backgroundColor = Float4(0f, 0f, 1f, 1f)
         )
     )
 )
