@@ -7,6 +7,9 @@ data class Box(val top: Val, val bottom: Val, val left: Val, val right: Val) {
         fun all(all: Val) = Box(all, all, all, all)
         fun axis(topBottom: Val, leftRight: Val) = Box(topBottom, topBottom, leftRight, leftRight)
     }
+
+    fun length(dimensions: FlexboxDimensions) = top.calculate(dimensions, Axis.VERTICAL) + bottom.calculate(dimensions, Axis.VERTICAL) + left.calculate(dimensions, Axis.HORIZONTAL) + right.calculate(dimensions, Axis.HORIZONTAL)
+    fun isNotEmpty() = length(FlexboxDimensions(0, 0, 1000, 1000)) > 0
 }
 
 // some supporting classes for dynamic values

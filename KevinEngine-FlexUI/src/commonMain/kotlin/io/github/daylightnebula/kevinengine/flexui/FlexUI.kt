@@ -31,6 +31,7 @@ val root = Flexbox(
             height = PxVal(60),
 //            border = Box.axis(PxVal(5), PxVal(0)),
             border = Box.all(PxVal(3)),
+            borderRadius = Box.all(PxVal(20)),
             backgroundColor = Float4(1f, 0f, 0f, 1f)
         ),
 //        Flexbox(
@@ -44,6 +45,7 @@ val root = Flexbox(
             height = PxVal(60),
 //            border = Box.axis(PxVal(5), PxVal(0)),
             border = Box.all(PxVal(3)),
+            borderRadius = Box.all(PxVal(20)),
             backgroundColor = Float4(0f, 0f, 1f, 1f)
         )
     )

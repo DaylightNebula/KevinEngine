@@ -24,7 +24,9 @@ open class Flexbox(
     val borderColor: Float4 = Float4(0f, 0f, 0f, 1f),
     val margin: Box = Box.all(PxVal(0)),
     val border: Box = Box.all(PxVal(0)),
+    val borderRadius: Box = Box.all(PxVal(0)),
     val padding: Box = Box.all(PxVal(0)),
+    val borderFactor: Float = if (border.isNotEmpty()) 0.02f else 0.0002f,
     val childrenDirection: FlexDirection = FlexDirection.COLUMN,
     val children: MutableList<Flexbox> = mutableListOf()
 ) {
@@ -60,6 +62,13 @@ open class Flexbox(
             border.left.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
             border.right.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
         ))
+        flexboxQuad.shader.setUniformVec4("borderRadius", Float4(
+            borderRadius.top.calculate(dimensions, Axis.VERTICAL).toFloat() / dimensions.height,
+            borderRadius.bottom.calculate(dimensions, Axis.VERTICAL).toFloat() / dimensions.height,
+            borderRadius.left.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
+            borderRadius.right.calculate(dimensions, Axis.HORIZONTAL).toFloat() / dimensions.width,
+        ))
+        flexboxQuad.shader.setUniformFloat("borderFactor", borderFactor)
         flexboxQuad.render()
 
         // render children only if necessary
@@ -239,7 +248,7 @@ val flexboxQuad = bufferCollection(
         "flexbox",
         "/flexbox_vert.glsl",
         "/flexbox_frag.glsl",
-        listOf("matrix", "color", "border", "borderColor")
+        listOf("matrix", "color", "border", "borderColor", "borderRadius", "borderFactor")
     ),
     RenderShapeType.QUADS,
     metadata("positions", 0, 3) to genBuffer(
