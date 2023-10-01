@@ -22,14 +22,15 @@ val root = Flexbox(
     width = PercentVal(0.25f),
     height = PercentVal(0.25f),
 //    padding = Box.all(PxVal(10)),
-    horizontalAlignment = Alignment.START,
-    verticalAlignment = Alignment.START,
+    horizontalAlignment = Alignment.CENTER,
+    verticalAlignment = Alignment.CENTER,
     childrenDirection = FlexDirection.COLUMN,
     children = mutableListOf(
         Flexbox(
             width = PxVal(60),
             height = PxVal(60),
-            border = Box.all(PxVal(1)),
+//            border = Box.axis(PxVal(5), PxVal(0)),
+            border = Box.all(PxVal(3)),
             backgroundColor = Float4(1f, 0f, 0f, 1f)
         ),
 //        Flexbox(
@@ -41,7 +42,8 @@ val root = Flexbox(
         Flexbox(
             width = PxVal(60),
             height = PxVal(60),
-            border = Box.all(PxVal(1)),
+//            border = Box.axis(PxVal(5), PxVal(0)),
+            border = Box.all(PxVal(3)),
             backgroundColor = Float4(0f, 0f, 1f, 1f)
         )
     )

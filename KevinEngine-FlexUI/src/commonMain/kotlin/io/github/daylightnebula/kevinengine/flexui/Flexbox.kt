@@ -182,7 +182,6 @@ open class Flexbox(
                     targetWidth - padding.left.calculate(dimensions, Axis.HORIZONTAL) - padding.right.calculate(dimensions, Axis.VERTICAL),
                     targetHeight - padding.top.calculate(dimensions, Axis.VERTICAL) - padding.bottom.calculate(dimensions, Axis.VERTICAL)
                 )
-                println("Child dimensions: $childDimensions")
 
                 // render child
                 child.render(childDimensions)
