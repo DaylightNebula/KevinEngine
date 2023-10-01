@@ -26,7 +26,7 @@ open class Flexbox(
     val border: Box = Box.all(PxVal(0)),
     val borderRadius: Box = Box.all(PxVal(0)),
     val padding: Box = Box.all(PxVal(0)),
-    val borderFactor: Float = if (border.isNotEmpty()) 0.02f else 0.0002f,
+    val borderFactor: Float = if (border.isNotEmpty()) 0.02f else 0.0000001f,
     val childrenDirection: FlexDirection = FlexDirection.COLUMN,
     val children: MutableList<Flexbox> = mutableListOf()
 ) {
