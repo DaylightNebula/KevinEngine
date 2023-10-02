@@ -9,7 +9,7 @@ import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
 
 class TexturedQuadTest {
-    val scaleMatrix = Mat4.identity().scale(0.5f)
+    val scaleMatrix = scaleMatrix(0.5f)
     val shader = ShaderProgram(
         "base",
         "/texquad_vert.glsl",

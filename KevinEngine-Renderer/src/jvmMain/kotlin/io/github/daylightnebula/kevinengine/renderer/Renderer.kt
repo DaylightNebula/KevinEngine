@@ -1,19 +1,29 @@
 package io.github.daylightnebula.kevinengine.renderer
 
 import io.github.daylightnebula.kevinengine.app.AppInfo
+import org.joml.Matrix4f
+import org.joml.Matrix4fc
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20.*
 
 actual fun setupRenderer(info: AppInfo) {
     GL.createCapabilities()
     glClearColor(info.clearColor.x, info.clearColor.y, info.clearColor.z, info.clearColor.w)
+
+    // enabling alpha blending
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    glEnable(GL_DEPTH_TEST)
+    glDepthFunc(GL_LESS)
 }
 
 actual fun drawing(internal: () -> Unit) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // start render
     glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+    val mat = Matrix4f().lookAt(Vector3f(4f, 3f, 3f), Vector3f(0f, 0f, 0f), Vector3f(0f, 1f, 0f))
+    println("Target ${mat.get(FloatArray(16)).toList()}")
 
     // do render
     internal()
@@ -46,7 +56,7 @@ actual fun drawAttachedRaw(shader: ShaderProgram, count: Int, type: RenderShapeT
             when (type) {
                 RenderShapeType.QUADS -> GL_QUADS
                 RenderShapeType.TRIANGLES -> GL_TRIANGLES
-            }, 0, count
+            }, 0, count / 3
         )
     }
 }

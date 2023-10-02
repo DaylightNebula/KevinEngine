@@ -1,5 +1,6 @@
 package io.github.daylightnebula.kevinengine.renderer
 
+import dev.romainguy.kotlin.math.perspective
 import org.lwjgl.opengl.GL15.*
 
 actual class Buffer actual constructor(actual val inputs: FloatArray) {

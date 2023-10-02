@@ -40,6 +40,11 @@ actual fun app(
     glfwWindowHint(GLFW_DECORATED, info.nativeInfo.decorated.toGLFW())
     glfwWindowHint(GLFW_MAXIMIZED, info.nativeInfo.maximized.toGLFW())
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, info.nativeInfo.windowTransparent.toGLFW())
+    glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true.toGLFW()); // To make MacOS happy; should not be needed
+//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
     windowID = glfwCreateWindow(info.width, info.height, info.winName, 0, 0)
 
     // setup window

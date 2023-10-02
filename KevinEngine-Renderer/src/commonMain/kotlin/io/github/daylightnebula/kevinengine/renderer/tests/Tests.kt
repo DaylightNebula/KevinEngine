@@ -2,7 +2,7 @@ package io.github.daylightnebula.kevinengine.renderer.tests
 
 fun main() {
 //    EmptyTest().main()
-    TexturedQuadTest().main()
+//    TexturedQuadTest().main()
 //    QuadTest().main()
-//    ShaderConverterTest().main()
+    CubeTest().main()
 }
