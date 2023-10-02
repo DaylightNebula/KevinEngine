@@ -1,9 +1,9 @@
 package io.github.daylightnebula.kevinengine.flexui
 
-import dev.romainguy.kotlin.math.Float4
-import dev.romainguy.kotlin.math.Mat4
-import io.github.daylightnebula.kevinengine.app.scale
-import io.github.daylightnebula.kevinengine.app.translate
+import io.github.daylightnebula.kevinengine.math.Float4
+import io.github.daylightnebula.kevinengine.math.Mat4
+import io.github.daylightnebula.kevinengine.math.scale
+import io.github.daylightnebula.kevinengine.math.translation
 import io.github.daylightnebula.kevinengine.renderer.*
 
 data class FlexboxDimensions(val x: Int, val y: Int, val width: Int, val height: Int)
@@ -36,20 +36,19 @@ open class Flexbox(
     open var defaultHeight: Val = PxVal(0)
 
     // render
-    open fun render(parent: FlexboxDimensions) {
+    open fun render(parent: FlexboxDimensions, depth: Float = -1f) {
         // make sure dimensions is up-to-date
         if (!this::dimensions.isInitialized) dimensions = recalculate(parent)
 
         // start building matrix
-        val matrix = Mat4.identity()
-            .scale(
+        val matrix = scale(
                 dimensions.width.toFloat() / windowDimensions.width,
                 dimensions.height.toFloat() / windowDimensions.height,
                 1f
-            ).translate(
+            ) * translation(
                 dimensions.x.toFloat() / (windowDimensions.width / 2),
                 -dimensions.y.toFloat() / (windowDimensions.height / 2),
-                0f
+                depth
             )
 
         // call render
@@ -193,7 +192,7 @@ open class Flexbox(
                 )
 
                 // render child
-                child.render(childDimensions)
+                child.render(childDimensions, depth = depth - 0.1f)
 
                 // update offsets
                 if (childOffsets[2] == -1) childOffsets[0] += targetWidth

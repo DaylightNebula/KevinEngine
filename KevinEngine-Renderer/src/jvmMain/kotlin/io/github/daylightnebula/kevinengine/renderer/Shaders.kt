@@ -1,15 +1,9 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-import dev.romainguy.kotlin.math.Float2
-import dev.romainguy.kotlin.math.Float3
-import dev.romainguy.kotlin.math.Float4
-import dev.romainguy.kotlin.math.Mat4
-import io.github.daylightnebula.kevinengine.app.getFloatArrayFromMat
-import io.github.daylightnebula.kevinengine.renderer.ShaderType
-import org.joml.Matrix4f
-import org.joml.Vector2f
-import org.joml.Vector3f
-import org.joml.Vector4f
+import io.github.daylightnebula.kevinengine.math.Float2
+import io.github.daylightnebula.kevinengine.math.Float3
+import io.github.daylightnebula.kevinengine.math.Float4
+import io.github.daylightnebula.kevinengine.math.Mat4
 import org.lwjgl.opengl.GL20.*
 import java.lang.IllegalArgumentException
 import kotlin.system.exitProcess
@@ -136,7 +130,7 @@ actual class ShaderProgram actual constructor(
     actual fun setUniformVec4(name: String, value: Float4) =
         glUniform4f(getUniform(name), value.x, value.y, value.z, value.w)
     actual fun setUniformMat4(name: String, value: Mat4) =
-        glUniformMatrix4fv(getUniform(name), false, getFloatArrayFromMat(value))
+        glUniformMatrix4fv(getUniform(name), false, value.toFloatArrayColumnAligned())
     actual fun setUniformTex(name: String, value: Texture) {
         glActiveTexture(GL_TEXTURE0)                // use texture unit 0
         glBindTexture(GL_TEXTURE_2D, value.get())   // bind texture

@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    commonMainImplementation("dev.romainguy:kotlin-math:1.5.3")
+    commonMainImplementation(project(":KevinEngine-Math"))
 }
 
 kotlin {

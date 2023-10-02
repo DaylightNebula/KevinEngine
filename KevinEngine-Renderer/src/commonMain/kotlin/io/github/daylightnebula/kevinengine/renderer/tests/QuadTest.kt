@@ -1,15 +1,16 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
-import dev.romainguy.kotlin.math.Float4
-import dev.romainguy.kotlin.math.Mat4
+import io.github.daylightnebula.kevinengine.math.Float4
+import io.github.daylightnebula.kevinengine.math.Mat4
 import io.github.daylightnebula.kevinengine.app.*
 import io.github.daylightnebula.kevinengine.app.keyboard.Key
 import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
 import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
+import io.github.daylightnebula.kevinengine.math.scale
 import io.github.daylightnebula.kevinengine.renderer.*
 
 class QuadTest {
-    val scaleMatrix = scaleMatrix(0.5f)
+    val scaleMatrix = scale(0.5f)
     val shader = ShaderProgram(
         "base",
         "/quad_vert.glsl",

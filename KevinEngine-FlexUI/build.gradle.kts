@@ -10,9 +10,9 @@ repositories {
 }
 
 dependencies {
+    commonMainImplementation(project(":KevinEngine-Math"))
     commonMainImplementation(project(":KevinEngine-App"))
     commonMainImplementation(project(":KevinEngine-Renderer"))
-    commonMainImplementation("dev.romainguy:kotlin-math:1.5.3")
 }
 
 kotlin {

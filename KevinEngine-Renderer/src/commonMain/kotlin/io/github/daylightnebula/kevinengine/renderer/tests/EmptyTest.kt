@@ -1,6 +1,6 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
-import dev.romainguy.kotlin.math.Float4
+import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.app.App
 import io.github.daylightnebula.kevinengine.app.AppInfo
 import io.github.daylightnebula.kevinengine.app.app

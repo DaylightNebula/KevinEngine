@@ -1,6 +1,6 @@
 package io.github.daylightnebula.kevinengine.app
 
-import dev.romainguy.kotlin.math.Float4
+import io.github.daylightnebula.kevinengine.math.Float4
 
 data class AppInfo(
     val winName: String,

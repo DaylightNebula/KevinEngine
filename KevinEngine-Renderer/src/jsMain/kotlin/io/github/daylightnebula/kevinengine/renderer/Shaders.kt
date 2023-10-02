@@ -1,9 +1,9 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-import dev.romainguy.kotlin.math.Float2
-import dev.romainguy.kotlin.math.Float3
-import dev.romainguy.kotlin.math.Float4
-import dev.romainguy.kotlin.math.Mat4
+import io.github.daylightnebula.kevinengine.math.Float2
+import io.github.daylightnebula.kevinengine.math.Float3
+import io.github.daylightnebula.kevinengine.math.Float4
+import io.github.daylightnebula.kevinengine.math.Mat4
 import kotlinx.browser.window
 import org.khronos.webgl.WebGLProgram
 import org.khronos.webgl.WebGLShader

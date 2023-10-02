@@ -1,6 +1,6 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
-import dev.romainguy.kotlin.math.*
+import io.github.daylightnebula.kevinengine.math.*
 import io.github.daylightnebula.kevinengine.app.*
 import io.github.daylightnebula.kevinengine.app.keyboard.Key
 import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
@@ -29,23 +29,23 @@ class CubeTest {
 
         // todo write code and tests for perspective and look at matrices
         override fun update(delta: Float) = drawing {
-            val projection = Mat4(
-                Float4(1.0083325f, 0f, 0f, 0f),
-                Float4(0f, 1.792591f, 0f, 0f),
-                Float4(0f, 0f, -1.002002f, -1f),
-                Float4(0f, 0f, -0.2002002f, 0f)
-            )
-            val view = Mat4(
-                Float4(0.59999996f, -0.4115966f, 0.6859944f, 0f),
-                Float4(0f, 0.8574929f, 0.5144958f, 0f),
-                Float4(-0.79999995f, -0.30869746f, 0.5144958f, 0f),
-                Float4(-0f, -0f, -5.8309526f, 1.0f)
-            )
-            val model = Mat4.identity() //translationMatrix(0f, 0f, time) // time > 1f, causes disappear
-            println("Current projection ${getFloatArrayFromMat(projection).toList()}")
+//            val projection = Mat4(
+//                Float4(1.0083325f, 0f, 0f, 0f),
+//                Float4(0f, 1.792591f, 0f, 0f),
+//                Float4(0f, 0f, -1.002002f, -1f),
+//                Float4(0f, 0f, -0.2002002f, 0f)
+//            )
+            val projection = perspective(45f, 1280f / 720f, 0.1f, 100f)
+//            val view = Mat4(
+//                Float4(0.59999996f, -0.4115966f, 0.6859944f, 0f),
+//                Float4(0f, 0.8574929f, 0.5144958f, 0f),
+//                Float4(-0.79999995f, -0.30869746f, 0.5144958f, 0f),
+//                Float4(-0f, -0f, -5.8309526f, 1.0f)
+//            )
+            val view = lookAt(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f))
+            val model = scale(Float3(0.5f)) * translation(Float3(0f, 0f, time)) // time > 1f, causes disappear
             val mvp = projection * view * model
-            println("Time $time")
-            time += delta * 5f
+            time += delta * 30f
             cube.shader.setUniformMat4("MVP", mvp)
             cube.render()
         }

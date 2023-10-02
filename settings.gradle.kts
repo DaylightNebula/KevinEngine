@@ -10,6 +10,7 @@ pluginManagement {
 }
 
 rootProject.name = "KevinEngine"
+include(":KevinEngine-Math")
 include(":KevinEngine-App")
 include(":KevinEngine-Renderer")
 include(":KevinEngine-FlexUI")

@@ -3,7 +3,6 @@ package io.github.daylightnebula.kevinengine.renderer
 import io.github.daylightnebula.kevinengine.app.AppInfo
 import org.joml.Matrix4f
 import org.joml.Matrix4fc
-import org.joml.Vector3f
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20.*
 
@@ -22,8 +21,8 @@ actual fun drawing(internal: () -> Unit) {
     // start render
     glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-    val mat = Matrix4f().lookAt(Vector3f(4f, 3f, 3f), Vector3f(0f, 0f, 0f), Vector3f(0f, 1f, 0f))
-    println("Target ${mat.get(FloatArray(16)).toList()}")
+//    val mat = Matrix4f().identity().lookAt(45f, 1280f/ 720f, 0.1f, 100f)
+//    println("Target ${mat.get(FloatArray(16)).toList()}")
 
     // do render
     internal()

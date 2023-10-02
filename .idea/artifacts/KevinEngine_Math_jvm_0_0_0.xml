@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="KevinEngine-Math-jvm-0.0.0">
+    <output-path>$PROJECT_DIR$/KevinEngine-Math/build/libs</output-path>
+    <root id="archive" name="KevinEngine-Math-jvm-0.0.0.jar">
+      <element id="module-output" name="KevinEngine.KevinEngine-Math.jvmMain" />
+    </root>
+  </artifact>
+</component>
