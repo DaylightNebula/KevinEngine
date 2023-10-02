@@ -13,16 +13,13 @@ actual fun setupRenderer(info: AppInfo) {
     // enabling alpha blending
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    glEnable(GL_DEPTH_TEST)
-    glDepthFunc(GL_LESS)
+//    glEnable(GL_DEPTH_TEST)
+//    glDepthFunc(GL_LESS)
 }
 
 actual fun drawing(internal: () -> Unit) {
     // start render
     glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-
-//    val mat = Matrix4f().identity().lookAt(45f, 1280f/ 720f, 0.1f, 100f)
-//    println("Target ${mat.get(FloatArray(16)).toList()}")
 
     // do render
     internal()

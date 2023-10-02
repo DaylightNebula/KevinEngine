@@ -36,7 +36,7 @@ open class Flexbox(
     open var defaultHeight: Val = PxVal(0)
 
     // render
-    open fun render(parent: FlexboxDimensions, depth: Float = -1f) {
+    open fun render(parent: FlexboxDimensions, depth: Float = 0f) {
         // make sure dimensions is up-to-date
         if (!this::dimensions.isInitialized) dimensions = recalculate(parent)
 
@@ -46,9 +46,9 @@ open class Flexbox(
                 dimensions.height.toFloat() / windowDimensions.height,
                 1f
             ) * translation(
-                dimensions.x.toFloat() / (windowDimensions.width / 2),
-                -dimensions.y.toFloat() / (windowDimensions.height / 2),
-                depth
+                dimensions.x.toFloat() / (dimensions.width / 2),
+                dimensions.y.toFloat() / (dimensions.height / 2),
+                0f
             )
 
         // call render
@@ -88,8 +88,10 @@ open class Flexbox(
                     childOffsets[2] = totalChildDimensions[0]
 
                     // setup y, y step, and height offsets
-                    childOffsets[1] = ((dimensions.height - totalChildDimensions[1]) - dimensions.height) / 4
+                    childOffsets[1] = ((dimensions.height - totalChildDimensions[1]) - dimensions.height) / -4
                     childOffsets[3] = -1
+
+                    println("Child offsets ${childOffsets.toList()}")
 
                     totalChildDimensions
                 }
@@ -106,7 +108,7 @@ open class Flexbox(
                     childOffsets[2] = totalChildDimensions[0]
 
                     // setup y, y step, and height offsets
-                    childOffsets[1] = ((dimensions.height - totalChildDimensions[1]) - dimensions.height) / -4
+                    childOffsets[1] = ((dimensions.height - totalChildDimensions[1]) - dimensions.height) / 4
                     childOffsets[3] = -2
 
                     totalChildDimensions
@@ -120,7 +122,7 @@ open class Flexbox(
                     )
 
                     // setup x and width offsets
-                    childOffsets[0] = ((dimensions.width - totalChildDimensions[0]) - dimensions.width) / 4
+                    childOffsets[0] = ((dimensions.width - totalChildDimensions[0]) - dimensions.width) / -4
                     childOffsets[2] = -1
 
                     // setup y, y step, and height offsets
@@ -138,7 +140,7 @@ open class Flexbox(
                     )
 
                     // setup x and width offsets
-                    childOffsets[0] = ((dimensions.width - totalChildDimensions[0]) - dimensions.width) / -4
+                    childOffsets[0] = ((dimensions.width - totalChildDimensions[0]) - dimensions.width) / 4
                     childOffsets[2] = -2
 
                     // setup y, y step, and height offsets
@@ -195,10 +197,10 @@ open class Flexbox(
                 child.render(childDimensions, depth = depth - 0.1f)
 
                 // update offsets
-                if (childOffsets[2] == -1) childOffsets[0] += targetWidth
-                if (childOffsets[3] == -1) childOffsets[1] += targetHeight
-                if (childOffsets[2] == -2) childOffsets[0] -= targetWidth
-                if (childOffsets[3] == -2) childOffsets[1] -= targetHeight
+                if (childOffsets[2] == -1) childOffsets[0] -= targetWidth
+                if (childOffsets[3] == -1) childOffsets[1] -= targetHeight
+                if (childOffsets[2] == -2) childOffsets[0] += targetWidth
+                if (childOffsets[3] == -2) childOffsets[1] += targetHeight
             }
         }
     }

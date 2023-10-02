@@ -21,7 +21,6 @@ fun renderFlexbox(box: Flexbox, info: AppInfo) {
 val root = Flexbox(
     width = PercentVal(0.25f),
     height = PercentVal(0.25f),
-//    padding = Box.all(PxVal(10)),
     horizontalAlignment = Alignment.CENTER,
     verticalAlignment = Alignment.CENTER,
     childrenDirection = FlexDirection.COLUMN,
@@ -29,21 +28,13 @@ val root = Flexbox(
         Flexbox(
             width = PxVal(60),
             height = PxVal(60),
-//            border = Box.axis(PxVal(5), PxVal(0)),
             border = Box.all(PxVal(3)),
             borderRadius = Box.all(PxVal(20)),
             backgroundColor = Float4(1f, 0f, 0f, 1f)
         ),
-//        Flexbox(
-//            width = PxVal(60),
-//            height = PxVal(60),
-//            border = Box.all(PxVal(1)),
-//            backgroundColor = Float4(0f, 1f, 0f, 1f)
-//        ),
         Flexbox(
             width = PxVal(60),
             height = PxVal(60),
-//            border = Box.axis(PxVal(5), PxVal(0)),
             border = Box.all(PxVal(3)),
             borderRadius = Box.all(PxVal(20)),
             backgroundColor = Float4(0f, 0f, 1f, 1f)
