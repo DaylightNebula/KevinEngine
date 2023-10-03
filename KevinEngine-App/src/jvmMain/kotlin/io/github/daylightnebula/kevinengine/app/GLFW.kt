@@ -43,8 +43,7 @@ actual fun app(
     glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true.toGLFW()); // To make MacOS happy; should not be needed
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true.toGLFW()); // To make Mac happy; should not be needed
     windowID = glfwCreateWindow(info.width, info.height, info.winName, 0, 0)
 
     // setup window
@@ -101,6 +100,9 @@ actual fun app(
             val waitTime = (target - elapsedMS).coerceAtLeast(0)
             sleep(waitTime)
         }
+
+        // if 1 ms has not passed, wait 1 ms
+        if (System.currentTimeMillis() - timer < 1) sleep(1)
 
         // update delta time
         deltaSeconds = (System.currentTimeMillis() - timer).coerceAtLeast(0) / 1000f

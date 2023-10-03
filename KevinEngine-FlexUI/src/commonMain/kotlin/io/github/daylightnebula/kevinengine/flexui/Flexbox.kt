@@ -180,10 +180,10 @@ open class Flexbox(
                 // calculate target width and height
                 val targetWidth =
                     if (childOffsets[2] < 0) child.getTargetWidth(dimensions)
-                    else (dimensions.width - child.getTargetWidth(dimensions)) / 2
+                    else (dimensions.width /*- child.getTargetWidth(dimensions)*/) / 2
                 val targetHeight =
                     if (childOffsets[3] < 0) child.getTargetHeight(dimensions)
-                    else (dimensions.height - child.getTargetHeight(dimensions)) / 2
+                    else (dimensions.height /*- child.getTargetHeight(dimensions)*/) / 2
 
                 // calculate final child dimensions
                 val childDimensions = FlexboxDimensions(
@@ -193,6 +193,7 @@ open class Flexbox(
                     targetHeight - padding.top.calculate(dimensions, Axis.VERTICAL) - padding.bottom.calculate(dimensions, Axis.VERTICAL)
                 )
 
+                println("Dimensions ${child.getTargetWidth(dimensions)} ${child.getTargetHeight(dimensions)} $dimensions")
                 // render child
                 child.render(childDimensions, depth = depth - 0.1f)
 
