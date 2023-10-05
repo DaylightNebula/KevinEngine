@@ -33,13 +33,20 @@ class WorldTests {
         val c = entity(C(), D(), E())
         world.insert(a, b, c)
 
-        println(world)
-        println(world.query(D::class))
         assertEqualsIgnoreOrder(world.query(A::class, B::class), listOf(a))
         assertEqualsIgnoreOrder(world.query(B::class), listOf(a, b))
-        println("Starting test: ")
-        recursivelyPrintTree(world.root)
         assertEqualsIgnoreOrder(world.query(D::class), listOf(a, b, c))
+    }
+
+    @Test
+    fun worldTestInsert3() {
+        world.clear()
+        val a = entity(A(), B(), D(), E())
+        val b = entity(A(), C(), D(), E())
+        world.insert(a, b)
+
+        assertEqualsIgnoreOrder(world.query(A::class), listOf(a, b))
+        assertEqualsIgnoreOrder(world.query(D::class, E::class), listOf(a, b))
     }
 }
 
