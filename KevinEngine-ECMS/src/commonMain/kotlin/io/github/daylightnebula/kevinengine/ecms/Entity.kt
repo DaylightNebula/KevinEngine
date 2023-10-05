@@ -3,8 +3,10 @@ package io.github.daylightnebula.kevinengine.ecms
 interface Component
 fun entity(vararg components: Component) = Entity(null, components.toMutableList())
 
-data class Entity(private val parentNode: Node?, private val internalComponents: MutableList<Component>) {
+class Entity(parentNode: Node?, internalComponents: MutableList<Component>) {
     val components: List<Component> = internalComponents
+    var parentNode: Node? = parentNode
+        internal set
 
     init {
         internalComponents.sortBy { it::class.qualifiedName }
