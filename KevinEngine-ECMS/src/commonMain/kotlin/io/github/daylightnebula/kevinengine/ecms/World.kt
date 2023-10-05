@@ -29,9 +29,13 @@ data class World(internal val root: Node = node("root")) {
     }
 
     // removes the given entity from
-//    fun remove(entity: Entity): Unit =
-//        queryNode(entity.components.map { it::class.qualifiedName!! })
-//            ?.entities?.remove(entity)
+    fun remove(entity: Entity): Boolean {
+        var result = false
+        queryNodes(entity.components.map { it::class.qualifiedName!! }).forEach {
+            result = result || it.entities.remove(entity)
+        }
+        return result
+    }
 
     private fun queryNodes(list: List<String>, node: Node = root, index: Int = 0): List<Node> {
         if (list.size <= index) return emptyList()
