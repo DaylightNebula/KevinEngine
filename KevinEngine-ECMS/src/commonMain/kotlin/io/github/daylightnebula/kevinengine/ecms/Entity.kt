@@ -11,4 +11,6 @@ class Entity(parentNode: Node?, internalComponents: MutableList<Component>) {
     init {
         internalComponents.sortBy { it::class.qualifiedName }
     }
+
+    override fun toString(): String = components.map { it::class.qualifiedName!! }.toString()
 }

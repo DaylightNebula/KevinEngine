@@ -4,8 +4,15 @@ import kotlin.reflect.KClass
 
 // nodes in a world tree, contains other nodes and entities
 fun node(name: String, parent: Node? = null, connection: Node? = null, vararg nodes: Pair<String, Node>) = Node(name, parent, connection, hashMapOf(*nodes))
-data class Node(val name: String, val parent: Node?, val connection: Node?, val nodes: HashMap<String, Node>, val entities: MutableList<Entity> = mutableListOf()) {
-    override fun toString(): String = "{ ${nodes.entries.joinToString { "${it.key}: ${it.value}" }} }"
+data class Node(
+    val name: String,
+    val parent: Node?,
+    val connection: Node?,
+    val nodes: HashMap<String, Node>,
+    val entities: MutableList<Entity> = mutableListOf(),
+    val subconnections: MutableList<Node> = mutableListOf()
+) {
+    override fun toString(): String = "{ ${nodes.entries.joinToString { "${it.key}: ${it.value}" }}, C: ${subconnections.size}, E: ${entities.size} }"
 }
 
 // essentially a container for the world tree
@@ -41,8 +48,10 @@ data class World(internal val root: Node = node("root")) {
             var next = curNode.nodes[target]
 
             if (next == null) {
-                if (!createIfNotFound) return null
-                else {
+                if (!createIfNotFound) {
+                    // see if we can look through children to find target (cant do this when creating)
+                    next = findInChildren(curNode, target) ?: return null
+                } else {
                     // back track through parents until a parent contains target or the root is found
                     var trackingNode = curNode
                     while(!trackingNode.nodes.containsKey(target) && trackingNode.name != "root")
@@ -55,8 +64,10 @@ data class World(internal val root: Node = node("root")) {
                     }
 
                     // create a new node that connects what we just found and cur node
-                    next = trackingNode
+                    next = node(target, parent = curNode, connection = trackingNode)
                     curNode.nodes[target] = next
+                    trackingNode.subconnections.add(next)
+                    if (target.contains("D")) println("Adding d subconnection")
                 }
             }
 
@@ -64,7 +75,23 @@ data class World(internal val root: Node = node("root")) {
             curNode = next
         }
 
+        println("Returning $curNode")
         return curNode
+    }
+
+    private fun findInChildren(node: Node, target: String): Node? {
+        if (node.nodes.isEmpty()) return null
+
+        val found = node.nodes[target]
+
+        if (found == null) {
+            for (subnode in node.nodes.values) {
+                val new = findInChildren(subnode, target)
+                if (new != null) return new
+            }
+        } else return found
+
+        return null
     }
 
     private fun findInRoot(lookingFor: String, createIfNotFound: Boolean): Node? {
@@ -80,9 +107,12 @@ data class World(internal val root: Node = node("root")) {
 
     private fun collectDescendentEntities(node: Node): List<Entity> {
         val list = node.nodes.values.flatMap { collectDescendentEntities(it) }.toMutableList()
+        list.addAll(node.subconnections.flatMap { collectDescendentEntities(it) })
         list.addAll(node.entities)
         return list
     }
+
+    override fun toString(): String = root.toString()
 
     // function to quickly clear the world
     fun clear() = root.nodes.clear()
