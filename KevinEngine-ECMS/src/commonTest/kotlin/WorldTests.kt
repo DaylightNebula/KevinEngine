@@ -19,6 +19,7 @@ class WorldTests {
         val entity = entity(C(), B(), A())
         val entity2 = entity(B())
         world.insert(entity, entity2)
+
         assertEqualsIgnoreOrder(world.queryRaw("WorldTests.A", "WorldTests.B", "WorldTests.C"), listOf(entity))
         assertEqualsIgnoreOrder(world.query(A::class, B::class, C::class), listOf(entity))
         assertEqualsIgnoreOrder(world.query(B::class), listOf(entity, entity2))
@@ -41,6 +42,7 @@ class WorldTests {
     @Test
     fun worldTestInsert3() {
         world.clear()
+
         val a = entity(A(), B(), D(), E())
         val b = entity(A(), C(), D(), E())
         world.insert(a, b)

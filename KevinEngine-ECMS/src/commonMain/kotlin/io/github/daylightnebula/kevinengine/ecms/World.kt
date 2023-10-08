@@ -3,6 +3,24 @@ package io.github.daylightnebula.kevinengine.ecms
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
+class Query(private val world: World, vararg components: KClass<*>) {
+    // save a version of the given components
+    private val queryElements = components.toList()
+
+    // cache queries for each tick
+    private var lastQueryTick = Long.MAX_VALUE
+    private var cache: List<Entity> = listOf()
+
+    // function for running a query
+    fun query(): List<Entity> {
+        if (lastQueryTick != world.queryTicker) {
+            cache = world.query(queryElements)
+            lastQueryTick = world.queryTicker
+        }
+        return cache
+    }
+}
+
 // nodes in a world tree, contains other nodes and entities
 fun node(name: String, parent: Node? = null, connection: Node? = null, vararg nodes: Pair<String, Node>) = Node(name, parent, connection, hashMapOf(*nodes))
 data class Node(
@@ -19,6 +37,10 @@ data class Node(
 
 // essentially a container for the world tree
 data class World(internal val root: Node = node("root")) {
+    var queryTicker = Long.MIN_VALUE
+        private set
+    fun clearQueries() = queryTicker++
+
     // finds a node for the given entity, creating new nodes if necessary, and adds the entity
     fun insert(vararg entities: Entity) = entities.forEach { insert(it) }
     fun insert(entity: Entity) {
