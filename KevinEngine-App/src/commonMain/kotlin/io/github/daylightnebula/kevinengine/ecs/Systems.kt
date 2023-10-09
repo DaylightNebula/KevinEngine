@@ -7,12 +7,13 @@ fun System.execute() = callback()
 fun List<System>.executeSystems() = forEach { it.execute() }
 
 // Module: a group of systems with some controls over events, the system group, state, etc
+fun module(vararg systems: System, systemGroup: String? = null) = Module(systemGroup, listOf(), systems.toList(), listOf())
 fun module(
-    vararg updateSystems: System,
     systemGroup: String? = null,
     startSystems: List<System> = listOf(),
+    updateSystems: List<System> = listOf(),
     stopSystems: List<System> = listOf()
-) = Module(systemGroup, startSystems, listOf(*updateSystems), stopSystems)
+) = Module(systemGroup, startSystems, updateSystems, stopSystems)
 
 data class Module(
     val systemGroup: String? = null,

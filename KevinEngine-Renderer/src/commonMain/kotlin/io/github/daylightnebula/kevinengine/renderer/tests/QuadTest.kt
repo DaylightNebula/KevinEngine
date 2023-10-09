@@ -45,10 +45,10 @@ class QuadTest {
         window(info),
         renderer(info),
         module(
-            system {
+            updateSystems = listOf(system {
                 shader.setUniformMat4("matrix", scaleMatrix)
                 buffers.render()
-            },
+            }),
             startSystems = listOf(system {
                 addKeyListener("esc_close") { key, event ->
                     if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()

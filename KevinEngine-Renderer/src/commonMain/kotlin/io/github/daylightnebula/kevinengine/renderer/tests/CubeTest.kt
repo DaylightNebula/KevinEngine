@@ -25,19 +25,22 @@ class CubeTest {
     fun main() = run(
         window(info),
         renderer(info),
-        module(system {
-            val projection = perspective(45f, 1280f / 720f, 0.1f, 100f)
-            val view = lookAt(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f))
-            val model = scale(Float3(0.5f)) * translation(Float3(0f, 0f, time)) // time > 1f, causes disappear
-            val mvp = projection * view * model
-//            time += delta * 30f
-            cube.shader.setUniformMat4("MVP", mvp)
-            cube.render()
-        }, startSystems = listOf(system {
-            addKeyListener("esc_close") { key, event ->
-                if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
-            }
-        }))
+        module(
+            updateSystems = listOf(system {
+                val projection = perspective(45f, 1280f / 720f, 0.1f, 100f)
+                val view = lookAt(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f))
+                val model = scale(Float3(0.5f)) * translation(Float3(0f, 0f, time)) // time > 1f, causes disappear
+                val mvp = projection * view * model
+    //            time += delta * 30f
+                cube.shader.setUniformMat4("MVP", mvp)
+                cube.render()
+            }),
+            startSystems = listOf(system {
+                addKeyListener("esc_close") { key, event ->
+                    if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
+                }
+            })
+        )
     )
 
     val cube = bufferCollection(

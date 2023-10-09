@@ -6,7 +6,7 @@ import io.github.daylightnebula.kevinengine.ecs.system
 
 fun renderer(info: AppInfo) = module(
     startSystems = listOf(system { setupRenderer(info) }),
-    updateSystems = arrayOf(system{ endRender(); startRender() })
+    updateSystems = listOf(system{ endRender(); startRender() })
 )
 
 expect fun setupRenderer(info: AppInfo)

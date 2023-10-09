@@ -74,7 +74,7 @@ actual fun window(info: AppInfo) = module(
         // show window
         glfwShowWindow(windowID)
     }),
-    updateSystems = arrayOf(system {
+    updateSystems = listOf(system {
         glfwSwapBuffers(windowID)
         glfwPollEvents()
         if (glfwWindowShouldClose(windowID)) stopApp()

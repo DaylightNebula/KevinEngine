@@ -48,11 +48,11 @@ class TexturedQuadTest {
         window(info),
         renderer(info),
         module(
-            system {
+            updateSystems = listOf(system {
                 shader.setUniformMat4("matrix", scaleMatrix)
                 shader.setUniformTex("tex0", texture)
                 buffers.render()
-            },
+            }),
             startSystems = listOf(system {
                 addKeyListener("esc_close") { key, event ->
                     if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
