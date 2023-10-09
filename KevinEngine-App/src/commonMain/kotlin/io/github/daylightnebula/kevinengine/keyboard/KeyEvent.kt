@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app.keyboard
+package io.github.daylightnebula.kevinengine.keyboard
 
 enum class KeyEvent {
     Released,

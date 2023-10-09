@@ -1,6 +1,6 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-import io.github.daylightnebula.kevinengine.app.AppInfo
+import io.github.daylightnebula.kevinengine.AppInfo
 import kotlinx.browser.document
 import org.w3c.dom.HTMLCanvasElement
 import org.khronos.webgl.WebGLRenderingContext as GL
@@ -12,16 +12,8 @@ actual fun setupRenderer(info: AppInfo) {
     gl.clearColor(info.clearColor.x, info.clearColor.y, info.clearColor.z, info.clearColor.w)
 }
 
-actual fun drawing(internal: () -> Unit) {
-    // start render
-    gl.clear(GL.COLOR_BUFFER_BIT or GL.DEPTH_BUFFER_BIT)
-
-    // do render
-    internal()
-
-    // end render
-    gl.flush()
-}
+actual fun startRender() = gl.clear(GL.COLOR_BUFFER_BIT or GL.DEPTH_BUFFER_BIT)
+actual fun endRender() = gl.flush()
 
 actual fun attachBuffer(index: Int, metadata: BufferMetadata, buffer: Buffer) {
     // make sure buffer is initialize

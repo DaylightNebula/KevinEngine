@@ -1,11 +1,14 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
+import io.github.daylightnebula.kevinengine.*
+import io.github.daylightnebula.kevinengine.ecs.module
+import io.github.daylightnebula.kevinengine.ecs.system
 import io.github.daylightnebula.kevinengine.math.*
-import io.github.daylightnebula.kevinengine.app.*
-import io.github.daylightnebula.kevinengine.app.keyboard.Key
-import io.github.daylightnebula.kevinengine.app.keyboard.KeyEvent
-import io.github.daylightnebula.kevinengine.app.keyboard.addKeyListener
+import io.github.daylightnebula.kevinengine.keyboard.Key
+import io.github.daylightnebula.kevinengine.keyboard.KeyEvent
+import io.github.daylightnebula.kevinengine.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
+import kotlin.run
 
 class CubeTest {
 
@@ -19,39 +22,23 @@ class CubeTest {
 
     var time = 0f
     val info = AppInfo("Cube Test", Float4(0f, 0f, 0f, 1f))
-    fun main() = app(info, object: App {
-        override fun start() {
-            setupRenderer(info)
-            addKeyListener("esc_close") { key, event ->
-                if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
-            }
-        }
-
-        // todo write code and tests for perspective and look at matrices
-        override fun update(delta: Float) = drawing {
-//            val projection = Mat4(
-//                Float4(1.0083325f, 0f, 0f, 0f),
-//                Float4(0f, 1.792591f, 0f, 0f),
-//                Float4(0f, 0f, -1.002002f, -1f),
-//                Float4(0f, 0f, -0.2002002f, 0f)
-//            )
+    fun main() = run(
+        window(info),
+        renderer(info),
+        module(system {
             val projection = perspective(45f, 1280f / 720f, 0.1f, 100f)
-//            val view = Mat4(
-//                Float4(0.59999996f, -0.4115966f, 0.6859944f, 0f),
-//                Float4(0f, 0.8574929f, 0.5144958f, 0f),
-//                Float4(-0.79999995f, -0.30869746f, 0.5144958f, 0f),
-//                Float4(-0f, -0f, -5.8309526f, 1.0f)
-//            )
             val view = lookAt(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f))
             val model = scale(Float3(0.5f)) * translation(Float3(0f, 0f, time)) // time > 1f, causes disappear
             val mvp = projection * view * model
-            time += delta * 30f
+//            time += delta * 30f
             cube.shader.setUniformMat4("MVP", mvp)
             cube.render()
-        }
-
-        override fun stop() {}
-    })
+        }, startSystems = listOf(system {
+            addKeyListener("esc_close") { key, event ->
+                if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
+            }
+        }))
+    )
 
     val cube = bufferCollection(
         ShaderProgram(

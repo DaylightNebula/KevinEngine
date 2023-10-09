@@ -1,7 +1,5 @@
-import io.github.daylightnebula.kevinengine.ecms.*
+import io.github.daylightnebula.kevinengine.ecs.*
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
 
 class WorldTests {
     // set up a world

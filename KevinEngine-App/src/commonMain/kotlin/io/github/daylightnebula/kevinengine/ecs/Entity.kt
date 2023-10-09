@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.ecms
+package io.github.daylightnebula.kevinengine.ecs
 
 interface Component
 fun entity(vararg components: Component) = Entity(null, components.toMutableList())
@@ -9,8 +9,8 @@ class Entity(parentNode: Node?, internalComponents: MutableList<Component>) {
         internal set
 
     init {
-        internalComponents.sortBy { it::class.qualifiedName }
+        internalComponents.sortBy { it::class.simpleName }
     }
 
-    override fun toString(): String = components.map { it::class.qualifiedName!! }.toString()
+    override fun toString(): String = components.map { it::class.simpleName!! }.toString()
 }

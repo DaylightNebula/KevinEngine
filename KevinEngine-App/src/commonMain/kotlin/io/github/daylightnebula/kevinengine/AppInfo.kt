@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app
+package io.github.daylightnebula.kevinengine
 
 import io.github.daylightnebula.kevinengine.math.Float4
 

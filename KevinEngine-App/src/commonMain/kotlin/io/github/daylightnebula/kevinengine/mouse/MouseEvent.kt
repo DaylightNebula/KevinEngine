@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app.mouse
+package io.github.daylightnebula.kevinengine.mouse
 
 sealed class MouseEvent {
     class MouseEnter: MouseEvent()

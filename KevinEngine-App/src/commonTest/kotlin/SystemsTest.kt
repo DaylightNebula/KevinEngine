@@ -1,4 +1,4 @@
-import io.github.daylightnebula.kevinengine.ecms.*
+import io.github.daylightnebula.kevinengine.ecs.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

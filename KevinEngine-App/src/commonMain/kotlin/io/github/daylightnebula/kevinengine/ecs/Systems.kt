@@ -1,8 +1,4 @@
-package io.github.daylightnebula.kevinengine.ecms
-
-// todo multithreading
-// todo finish system group implementation
-// todo states
+package io.github.daylightnebula.kevinengine.ecs
 
 // Systems: code that gets run by the thread manager
 fun system(callback: () -> Unit) = System(callback)

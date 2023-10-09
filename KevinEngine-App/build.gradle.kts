@@ -21,7 +21,11 @@ kotlin {
     jvm()
 
     sourceSets {
-        val commonMain by getting
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
         val jvmMain by getting {
             dependencies {
                 implementation(platform("org.lwjgl:lwjgl-bom:3.3.2"))

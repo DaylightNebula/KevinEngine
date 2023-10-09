@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app
+package io.github.daylightnebula.kevinengine
 
 fun convertStringCodeToKeyCode(input: String) = when (input) {
     "Escape" -> 1

@@ -1,8 +1,6 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-import io.github.daylightnebula.kevinengine.app.AppInfo
-import org.joml.Matrix4f
-import org.joml.Matrix4fc
+import io.github.daylightnebula.kevinengine.AppInfo
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20.*
 
@@ -17,16 +15,9 @@ actual fun setupRenderer(info: AppInfo) {
 //    glDepthFunc(GL_LESS)
 }
 
-actual fun drawing(internal: () -> Unit) {
-    // start render
-    glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+actual fun startRender() = glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+actual fun endRender() = glFlush()
 
-    // do render
-    internal()
-
-    // end render
-    glFlush()
-}
 
 // attaches the given buffer to be rendered
 actual fun attachBuffer(index: Int, metadata: BufferMetadata, buffer: Buffer) {

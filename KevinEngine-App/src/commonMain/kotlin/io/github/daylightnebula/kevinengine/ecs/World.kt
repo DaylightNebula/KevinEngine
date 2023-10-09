@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.ecms
+package io.github.daylightnebula.kevinengine.ecs
 
 import kotlin.random.Random
 import kotlin.reflect.KClass
@@ -44,7 +44,7 @@ data class World(internal val root: Node = node("root")) {
     // finds a node for the given entity, creating new nodes if necessary, and adds the entity
     fun insert(vararg entities: Entity) = entities.forEach { insert(it) }
     fun insert(entity: Entity) {
-        val node = createOrFindNodes(entity.components.map { it::class.qualifiedName!! })
+        val node = createOrFindNodes(entity.components.map { it::class.simpleName!! })
             ?: throw IllegalStateException("Failed to insert entity $entity")
         node.entities.add(entity)
         entity.parentNode = node
@@ -53,7 +53,7 @@ data class World(internal val root: Node = node("root")) {
     // removes the given entity from
     fun remove(entity: Entity): Boolean {
         var result = false
-        queryNodes(entity.components.map { it::class.qualifiedName!! }).forEach {
+        queryNodes(entity.components.map { it::class.simpleName!! }).forEach {
             result = result || it.entities.remove(entity)
         }
         return result
@@ -141,7 +141,7 @@ data class World(internal val root: Node = node("root")) {
 
     // exposed query functions to interface with internal query
     fun query(vararg list: KClass<*>) = query(list.toList())
-    fun query(list: List<KClass<*>>) = queryRaw(list.map { it.qualifiedName!! })
+    fun query(list: List<KClass<*>>) = queryRaw(list.map { it.simpleName!! })
     fun queryRaw(vararg list: String) = queryRaw(list.toList())
     fun queryRaw(list: List<String>): List<Entity>  = queryNodes(list.sorted()).flatMap { collectDescendentEntities(it) }
 }

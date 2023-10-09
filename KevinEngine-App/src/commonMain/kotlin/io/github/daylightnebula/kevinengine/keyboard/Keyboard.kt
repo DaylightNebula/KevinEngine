@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app.keyboard
+package io.github.daylightnebula.kevinengine.keyboard
 
 // buffer of all keys pressed states
 private val keyBuffer = BooleanArray(256)

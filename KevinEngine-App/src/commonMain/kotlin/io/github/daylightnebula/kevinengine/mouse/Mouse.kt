@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app.mouse
+package io.github.daylightnebula.kevinengine.mouse
 
 // some publicly available values values
 var mouseX = 0f

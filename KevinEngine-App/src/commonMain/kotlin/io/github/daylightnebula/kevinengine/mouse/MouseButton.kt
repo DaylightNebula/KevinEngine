@@ -1,4 +1,4 @@
-package io.github.daylightnebula.kevinengine.app.mouse
+package io.github.daylightnebula.kevinengine.mouse
 
 enum class MouseButton {
     LEFT,
