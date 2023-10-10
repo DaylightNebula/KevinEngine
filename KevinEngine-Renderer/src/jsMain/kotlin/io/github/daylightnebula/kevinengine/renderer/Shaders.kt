@@ -25,7 +25,7 @@ actual class Shader actual constructor(actual val path: String, actual val type:
         loading = true
 
         // fetch shader source
-        val fetch = window.fetch(path).then { res ->
+        window.fetch(path).then { res ->
             res.text().then { text ->
                 // create shader
                 val shader = gl.createShader(when(type) {

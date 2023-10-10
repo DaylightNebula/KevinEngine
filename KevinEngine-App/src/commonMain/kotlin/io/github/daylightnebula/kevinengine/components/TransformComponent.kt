@@ -11,5 +11,6 @@ data class TransformComponent(
     val scale: Float3 = Float3(1f)
 ): Component {
     fun toMatrix(): Mat4 = scale(scale) * rotation(rotation) * translation(position)
-    fun lookAt(lookAt: Float3, up: Float3 = Float3(0f, 1f, 0f)) = rotation.lookAlong(lookAt - position, up)
+    fun lookTowards(direction: Float3, up: Float3 = Float3(0f, 1f, 0f)) = rotation.lookAlong(direction, up)
+    fun lookAt(lookAt: Float3, up: Float3 = Float3(0f, 1f, 0f)) = lookTowards(lookAt - position, up)
 }

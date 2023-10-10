@@ -5,5 +5,6 @@ fun main() {
 //    EmptyTest().main()
 //    TexturedQuadTest().main()
 //    QuadTest().main()
-    CubeTest().main()
+//    CubeTest().main()
+    ObjTest().main()
 }
