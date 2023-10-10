@@ -312,6 +312,54 @@ data class Quaternion(
         return this
     }
 
+    // see JOML implementation
+    inline fun lookAlong(direction: Float3, up: Float3) {
+        val dirn = normalize(direction)
+        val left = normalize(Float3(
+            up.y * dirn.z - up.z * dirn.y,
+            up.z * dirn.x - up.x * dirn.z,
+            up.x * dirn.y - up.y * dirn.x
+        ))
+        val upn = Float3(
+            dirn.y * left.z - dirn.z * left.y,
+            dirn.z * left.x - dirn.x * left.z,
+            dirn.x * left.y - dirn.y * left.x
+        )
+
+        val tr = (left.x + upn.y + dirn.z).toDouble()
+        if (tr >= 0.0) {
+            var t = sqrt(tr + 1.0)
+            w = (t * 0.5).toFloat()
+            t = 0.5 / t
+            x = ((dirn.y - upn.z) * t).toFloat()
+            y = ((left.z - dirn.x) * t).toFloat()
+            z = ((upn.x - left.y) * t).toFloat()
+        } else if (left.x > upn.y && left.x > dirn.z) {
+            var t = sqrt(1.0 + left.x - upn.y - dirn.z)
+            x = (t * 0.5).toFloat()
+            t = 0.5 / t
+            y = ((left.y + upn.x) * t).toFloat()
+            z = ((dirn.x + left.z) * t).toFloat()
+            w = ((dirn.y - upn.z) * t).toFloat()
+        } else if (upn.y > dirn.z) {
+            var t = sqrt(1.0 + upn.y - left.x - dirn.z)
+            y = (t * 0.5).toFloat()
+            t = 0.5 / t
+            x = ((left.y + upn.x) * t).toFloat()
+            z = ((upn.z + dirn.y) * t).toFloat()
+            w = ((left.z - dirn.x) * t).toFloat()
+        } else {
+            var t = sqrt(1.0 + dirn.z - left.x - upn.y)
+            z = (t * 0.5).toFloat()
+            t = 0.5 / t
+            x = ((dirn.x + left.z) * t).toFloat()
+            y = ((upn.z + dirn.y) * t).toFloat()
+            w = ((upn.x - left.y) * t).toFloat()
+        }
+    }
+
+    fun fma(a: Float, b: Float, c: Float) = a * b + c
+
     fun toEulerAngles() = eulerAngles(this)
 
     fun toMatrix() = rotation(this)

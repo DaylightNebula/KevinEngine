@@ -4,7 +4,7 @@ import io.github.daylightnebula.kevinengine.ecs.Module
 import io.github.daylightnebula.kevinengine.ecs.SystemsController
 import io.github.daylightnebula.kevinengine.ecs.World
 
-val world = World()
+val mainWorld = World()
 var keepRunning = true
 fun stopApp() { keepRunning = false }
 

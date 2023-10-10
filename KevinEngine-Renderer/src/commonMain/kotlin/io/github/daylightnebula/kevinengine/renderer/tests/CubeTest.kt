@@ -1,8 +1,9 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
 import io.github.daylightnebula.kevinengine.*
-import io.github.daylightnebula.kevinengine.ecs.module
-import io.github.daylightnebula.kevinengine.ecs.system
+import io.github.daylightnebula.kevinengine.components.TransformComponent
+import io.github.daylightnebula.kevinengine.components.VisibilityComponent
+import io.github.daylightnebula.kevinengine.ecs.*
 import io.github.daylightnebula.kevinengine.math.*
 import io.github.daylightnebula.kevinengine.keyboard.Key
 import io.github.daylightnebula.kevinengine.keyboard.KeyEvent
@@ -26,29 +27,34 @@ class CubeTest {
         window(info),
         renderer(info),
         module(
-            updateSystems = listOf(system {
-                val projection = perspective(45f, 1280f / 720f, 0.1f, 100f)
-                val view = lookAt(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f))
-                val model = scale(Float3(0.5f)) * translation(Float3(0f, 0f, time)) // time > 1f, causes disappear
-                val mvp = projection * view * model
-    //            time += delta * 30f
-                cube.shader.setUniformMat4("MVP", mvp)
-                cube.render()
-            }),
             startSystems = listOf(system {
                 addKeyListener("esc_close") { key, event ->
                     if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
                 }
+
+                // create cube
+                entity(
+                    TransformComponent(),
+                    VisibilityComponent(),
+                    PrimitiveMesh(cube),
+                    PrimitiveMaterial(hashMapOf())
+                ).spawn()
+
+                // create camera
+                entity(
+                    Camera(45f, 1280f/720f, 0.1f, 100f),
+                    TransformComponent(position = Float3(-4f, -3f, -3f)).apply { lookAt(Float3()) }
+                ).spawn()
             })
         )
     )
 
-    val cube = bufferCollection(
+    private val cube = bufferCollection(
         ShaderProgram(
             "cube",
             "/cube_vert.glsl",
             "/cube_frag.glsl",
-            listOf("MVP")
+            listOf("mvp")
         ),
         RenderShapeType.TRIANGLES,
         metadata("positions", 0, 3) to genBuffer(

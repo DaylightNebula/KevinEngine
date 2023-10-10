@@ -1,12 +1,14 @@
 package io.github.daylightnebula.kevinengine.renderer.tests
 
 import io.github.daylightnebula.kevinengine.*
-import io.github.daylightnebula.kevinengine.ecs.module
-import io.github.daylightnebula.kevinengine.ecs.system
+import io.github.daylightnebula.kevinengine.components.TransformComponent
+import io.github.daylightnebula.kevinengine.components.VisibilityComponent
+import io.github.daylightnebula.kevinengine.ecs.*
 import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.keyboard.Key
 import io.github.daylightnebula.kevinengine.keyboard.KeyEvent
 import io.github.daylightnebula.kevinengine.keyboard.addKeyListener
+import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.scale
 import io.github.daylightnebula.kevinengine.renderer.*
 import kotlin.run
@@ -17,7 +19,7 @@ class QuadTest {
         "base",
         "/quad_vert.glsl",
         "/quad_frag.glsl",
-        listOf("matrix")
+        listOf("mvp")
     )
     val buffers = bufferCollection(
         shader,
@@ -45,31 +47,16 @@ class QuadTest {
         window(info),
         renderer(info),
         module(
-            updateSystems = listOf(system {
-                shader.setUniformMat4("matrix", scaleMatrix)
-                buffers.render()
-            }),
             startSystems = listOf(system {
                 addKeyListener("esc_close") { key, event ->
                     if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
                 }
+                entity(
+                    TransformComponent(scale = Float3(0.5f)),
+                    VisibilityComponent(),
+                    PrimitiveMesh(buffers)
+                ).spawn()
             })
         )
     )
-//    fun main() = app(info, object : App {
-//        override fun start() {
-//            setupRenderer(info)
-//
-//            addKeyListener("esc_close") { key, event ->
-//                if (key == Key.KEY_ESCAPE && event == KeyEvent.Released) stopApp()
-//            }
-//        }
-//
-//        override fun update(delta: Float) = drawing {
-//            shader.setUniformMat4("matrix", scaleMatrix)
-//            buffers.render()
-//        }
-//
-//        override fun stop() {}
-//    })
 }

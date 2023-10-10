@@ -4,20 +4,9 @@ layout(location = 1) in vec2 vertexUV;
 
 out vec2 UV;
 
-uniform mat4 matrix;
+uniform mat4 mvp;
 
 void main() {
-    gl_Position = matrix * vec4(vertexPosition_modelspace, 1);
+    gl_Position = mvp * vec4(vertexPosition_modelspace, 1);
     UV = vertexUV;
 }
-//attribute vec3 vertexPosition_modelspace;
-//attribute vec2 vertexUV;
-//
-//uniform mat4 matrix;
-//
-//varying vec2 UV;
-//
-//void main() {
-//    gl_Position = matrix * vec4(vertexPosition_modelspace, 1);
-//    UV = vertexUV;
-//}

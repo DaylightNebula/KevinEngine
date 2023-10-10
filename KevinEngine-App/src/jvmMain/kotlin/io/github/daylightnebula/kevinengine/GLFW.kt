@@ -9,6 +9,9 @@ import io.github.daylightnebula.kevinengine.mouse.MouseButton
 import io.github.daylightnebula.kevinengine.mouse.triggerMouseButton
 import io.github.daylightnebula.kevinengine.mouse.triggerMouseEnter
 import io.github.daylightnebula.kevinengine.mouse.triggerMouseMoveEvent
+import org.joml.Matrix4f
+import org.joml.Quaternionf
+import org.joml.Vector3f
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -102,6 +105,8 @@ actual fun app(start: () -> Unit, loop: (delta: Float) -> Unit, stop: () -> Unit
             val waitTime = (target - elapsedMS).coerceAtLeast(0)
             sleep(waitTime)
         }
+
+//        println("Test ${Quaternionf().lookAlong(Vector3f(-4f, -3f, -3f), Vector3f(0f, 1f, 0f))}")
 
         // if 1 ms has not passed, wait 1 ms
         if (System.currentTimeMillis() - timer < 1) sleep(1)

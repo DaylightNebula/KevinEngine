@@ -1,9 +1,10 @@
 package io.github.daylightnebula.kevinengine.ecs
 
+import io.github.daylightnebula.kevinengine.mainWorld
 import kotlin.random.Random
 import kotlin.reflect.KClass
 
-class Query(private val world: World, vararg components: KClass<*>) {
+class Query(vararg components: KClass<*>, private val world: World = mainWorld) {
     // save a version of the given components
     private val queryElements = components.toList()
 
