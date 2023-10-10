@@ -1,5 +1,3 @@
-package io.github.daylightnebula.kevinengine.renderer.tests
-
 import io.github.daylightnebula.kevinengine.*
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
@@ -11,7 +9,7 @@ import io.github.daylightnebula.kevinengine.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.scale
 import io.github.daylightnebula.kevinengine.renderer.*
-import kotlin.run
+import kotlin.test.Test
 
 class QuadTest {
     val scaleMatrix = scale(0.5f)
@@ -43,7 +41,8 @@ class QuadTest {
         Float4(0f, 0f, 0f, 1f)
     )
 
-    fun main() = run(
+    @Test
+    fun quadTest() = run(
         window(info),
         renderer(info),
         module(
@@ -54,7 +53,13 @@ class QuadTest {
                 entity(
                     TransformComponent(scale = Float3(0.5f)),
                     VisibilityComponent(),
-                    PrimitiveMesh(buffers)
+                    PrimitiveMesh(buffers),
+                    PrimitiveMaterial(hashMapOf())
+                ).spawn()
+
+                entity(
+                    Camera(45f, 1280f/720f, 0.1f, 100f),
+                    TransformComponent(position = Float3(0f, 0f, -1f))
                 ).spawn()
             })
         )

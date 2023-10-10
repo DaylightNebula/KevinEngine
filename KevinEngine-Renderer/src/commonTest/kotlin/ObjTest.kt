@@ -1,5 +1,3 @@
-package io.github.daylightnebula.kevinengine.renderer.tests
-
 import io.github.daylightnebula.kevinengine.*
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
@@ -13,13 +11,15 @@ import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.renderer.Camera
 import io.github.daylightnebula.kevinengine.renderer.PrimitiveMaterial
-import io.github.daylightnebula.kevinengine.renderer.PrimitiveMesh
 import io.github.daylightnebula.kevinengine.renderer.models.OBJMesh
 import io.github.daylightnebula.kevinengine.renderer.renderer
+import kotlin.test.Test
 
 class ObjTest {
     val info = AppInfo("ObjTest", clearColor = Float4(0f, 0f, 0f, 1f))
-    fun main() = run(
+
+    @Test
+    fun test() = run(
         window(info),
         renderer(info),
         module(

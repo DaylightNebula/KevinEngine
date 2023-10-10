@@ -1,5 +1,3 @@
-package io.github.daylightnebula.kevinengine.renderer.tests
-
 import io.github.daylightnebula.kevinengine.*
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
@@ -9,21 +7,14 @@ import io.github.daylightnebula.kevinengine.keyboard.Key
 import io.github.daylightnebula.kevinengine.keyboard.KeyEvent
 import io.github.daylightnebula.kevinengine.keyboard.addKeyListener
 import io.github.daylightnebula.kevinengine.renderer.*
-import kotlin.run
+import kotlin.test.Test
 
 class CubeTest {
 
-//    val model = scaleMatrix(0.5f)
-//    val view = lookAtMatrix(Float3(4f, 3f, 3f), Float3(0f, 0f, 0f), Float3(0f, 1f, 0f))
-//    val view = translationMatrix(0f, 0f, -2f)
-
-    val fov = radians(60f)
-    val near = 0.01f
-    val far = 100f
-
-    var time = 0f
     val info = AppInfo("Cube Test", Float4(0f, 0f, 0f, 1f))
-    fun main() = run(
+
+    @Test
+    fun cubeTest() = run(
         window(info),
         renderer(info),
         module(

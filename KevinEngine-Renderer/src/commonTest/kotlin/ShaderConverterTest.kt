@@ -1,10 +1,10 @@
-package io.github.daylightnebula.kevinengine.renderer.tests
-
 import io.github.daylightnebula.kevinengine.renderer.ShaderType
 import io.github.daylightnebula.kevinengine.renderer.convertShaderWebGL
+import kotlin.test.Test
 
 class ShaderConverterTest {
-    fun main() {
+    @Test
+    fun test() {
         val text = convertShaderWebGL("#version 330 core\n" +
                 "layout(location = 0) in vec3 vertexPosition_modelspace;\n" +
                 "layout(location = 1) in vec2 vertexUV;\n" +

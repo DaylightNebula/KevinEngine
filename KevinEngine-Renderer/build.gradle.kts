@@ -38,5 +38,10 @@ kotlin {
                 implementation("org.joml:joml:1.10.5")
             }
         }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }

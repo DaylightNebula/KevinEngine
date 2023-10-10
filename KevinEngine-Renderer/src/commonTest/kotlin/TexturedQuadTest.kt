@@ -1,7 +1,4 @@
-package io.github.daylightnebula.kevinengine.renderer.tests
-
 import io.github.daylightnebula.kevinengine.AppInfo
-import io.github.daylightnebula.kevinengine.app
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
@@ -14,6 +11,7 @@ import io.github.daylightnebula.kevinengine.math.scale
 import io.github.daylightnebula.kevinengine.renderer.*
 import io.github.daylightnebula.kevinengine.stopApp
 import io.github.daylightnebula.kevinengine.window
+import kotlin.test.Test
 
 class TexturedQuadTest {
     val scaleMatrix = scale(0.5f)
@@ -46,7 +44,8 @@ class TexturedQuadTest {
         Float4(0f, 0f, 0f, 1f)
     )
 
-    fun main() = io.github.daylightnebula.kevinengine.run(
+    @Test
+    fun test() = io.github.daylightnebula.kevinengine.run(
         window(info),
         renderer(info),
         module(
