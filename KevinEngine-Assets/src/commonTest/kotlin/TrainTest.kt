@@ -1,5 +1,6 @@
 import io.github.daylightnebula.kevinengine.AppInfo
-import io.github.daylightnebula.kevinengine.assets.loadObj
+import io.github.daylightnebula.kevinengine.assets.ObjModel
+import io.github.daylightnebula.kevinengine.assets.assets
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.entity
@@ -14,6 +15,7 @@ import io.github.daylightnebula.kevinengine.renderer.Camera
 import io.github.daylightnebula.kevinengine.renderer.Material
 import io.github.daylightnebula.kevinengine.renderer.Texture
 import io.github.daylightnebula.kevinengine.renderer.renderer
+import io.github.daylightnebula.kevinengine.run
 import io.github.daylightnebula.kevinengine.stopApp
 import io.github.daylightnebula.kevinengine.window
 import kotlin.test.Test
@@ -23,9 +25,8 @@ class TrainTest {
     val texture = Texture("/SimpleTrains_Texture_01.png")
 
     @Test
-    fun test() = io.github.daylightnebula.kevinengine.run(
-        window(info),
-        renderer(info),
+    fun test() = run(
+        window(info), renderer(info), assets(),
         module(
             startSystems = listOf(system {
                 addKeyListener("esc_close") { key, event ->
@@ -36,11 +37,10 @@ class TrainTest {
                 val entity = entity(
                     TransformComponent(),
                     VisibilityComponent(),
-//                    OBJMesh("/SM_Veh_Carriage_Logs_01.obj"),
+                    ObjModel("SM_Veh_Carriage_Logs_01_tri"),
                     Material(hashMapOf("diffuse" to texture))
                 )
                 entity.spawn()
-                loadObj(entity, "/SM_Veh_Carriage_Logs_01_tri.obj")
 
                 // create camera
                 entity(

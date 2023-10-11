@@ -19,7 +19,7 @@ class Entity(parentNode: Node?, val internalComponents: MutableList<Component>) 
         internalComponents.sortBy { it::class.simpleName }
     }
 
-    fun modComponents(world: World, callback: (components: MutableList<Component>) -> Unit) {
+    fun modComponents(world: World = mainWorld, callback: (components: MutableList<Component>) -> Unit) {
         world.remove(this)
         callback(internalComponents)
         internalComponents.sortBy { it::class.simpleName }
