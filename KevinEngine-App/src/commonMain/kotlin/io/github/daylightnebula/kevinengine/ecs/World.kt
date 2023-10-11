@@ -14,11 +14,17 @@ class Query(vararg components: KClass<*>, private val world: World = mainWorld) 
 
     // function for running a query
     fun query(): List<Entity> {
-        if (lastQueryTick != world.queryTicker) {
+        if (lastQueryTick != queryTicker) {
             cache = world.query(queryElements)
-            lastQueryTick = world.queryTicker
+            lastQueryTick = queryTicker
         }
         return cache
+    }
+
+    companion object {
+        var queryTicker = Long.MIN_VALUE
+            private set
+        fun clearQueries() = queryTicker++
     }
 }
 
@@ -38,10 +44,6 @@ data class Node(
 
 // essentially a container for the world tree
 data class World(internal val root: Node = node("root")) {
-    var queryTicker = Long.MIN_VALUE
-        private set
-    fun clearQueries() = queryTicker++
-
     // finds a node for the given entity, creating new nodes if necessary, and adds the entity
     fun insert(vararg entities: Entity) = entities.forEach { insert(it) }
     fun insert(entity: Entity) {
@@ -135,7 +137,7 @@ data class World(internal val root: Node = node("root")) {
         return list
     }
 
-    override fun toString(): String = root.toString()
+    override fun toString(): String = "World $root"
 
     // function to quickly clear the world
     fun clear() = root.nodes.clear()

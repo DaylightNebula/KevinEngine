@@ -27,8 +27,8 @@ class CubeTest {
                 entity(
                     TransformComponent(),
                     VisibilityComponent(),
-                    PrimitiveMesh(cube),
-                    PrimitiveMaterial(hashMapOf())
+                    Mesh(cube),
+                    Material(hashMapOf())
                 ).spawn()
 
                 // create camera

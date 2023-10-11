@@ -1,5 +1,6 @@
 package io.github.daylightnebula.kevinengine
 
+import io.github.daylightnebula.kevinengine.ecs.Query
 import io.github.daylightnebula.kevinengine.ecs.module
 import io.github.daylightnebula.kevinengine.ecs.system
 import io.github.daylightnebula.kevinengine.keyboard.Key
@@ -93,6 +94,8 @@ actual fun window(info: AppInfo) = module(
 actual fun app(start: () -> Unit, loop: (delta: Float) -> Unit, stop: () -> Unit) {
     start()
     while(keepRunning) {
+        Query.clearQueries()
+
         // get starting time and then call update
         val timer = System.currentTimeMillis()
         loop(deltaSeconds)

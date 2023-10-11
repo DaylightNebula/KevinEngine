@@ -1,5 +1,6 @@
 package io.github.daylightnebula.kevinengine
 
+import io.github.daylightnebula.kevinengine.ecs.Query
 import io.github.daylightnebula.kevinengine.ecs.module
 import io.github.daylightnebula.kevinengine.ecs.system
 import io.github.daylightnebula.kevinengine.keyboard.Key
@@ -32,6 +33,7 @@ actual fun app(start: () -> Unit, loop: (delta: Float) -> Unit, stop: () -> Unit
 }
 
 fun loop(callback: (delta: Float) -> Unit, stop: () -> Unit, timeStamp: Double) {
+    Query.clearQueries()
     callback((timeStamp - lastTimeStamp).toFloat())
     lastTimeStamp = timeStamp
     if (keepRunning) window.requestAnimationFrame { loop(callback, stop, it) }

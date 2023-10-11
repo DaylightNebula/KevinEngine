@@ -57,8 +57,8 @@ class TexturedQuadTest {
                 entity(
                     TransformComponent(scale = Float3(0.5f)),
                     VisibilityComponent(),
-                    PrimitiveMesh(buffers),
-                    PrimitiveMaterial(hashMapOf("tex0" to texture))
+                    Mesh(buffers),
+                    Material(hashMapOf("tex0" to texture))
                 ).spawn()
             })
         )

@@ -24,7 +24,7 @@ actual class Texture(val image: BufferedImage) {
 
         for (h in 0..< image.height) {
             for (w in 0..< image.width) {
-                val pixel: Int = pixels.get(h * image.width + w)
+                val pixel: Int = pixels[h * image.width + w]
                 buffer.put((pixel shr 16 and 0xFF).toByte())
                 buffer.put((pixel shr 8 and 0xFF).toByte())
                 buffer.put((pixel and 0xFF).toByte())

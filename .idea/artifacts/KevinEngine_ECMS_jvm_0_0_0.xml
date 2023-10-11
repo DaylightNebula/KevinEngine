@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="KevinEngine-ECMS-jvm-0.0.0">
+    <output-path>$PROJECT_DIR$/KevinEngine-ECMS/build/libs</output-path>
+    <root id="archive" name="KevinEngine-ECMS-jvm-0.0.0.jar">
+      <element id="module-output" name="KevinEngine.KevinEngine-ECMS.jvmMain" />
+    </root>
+  </artifact>
+</component>

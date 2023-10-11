@@ -11,6 +11,7 @@ pluginManagement {
 
 rootProject.name = "KevinEngine"
 include(":KevinEngine-App")
+include(":KevinEngine-Assets")
 include(":KevinEngine-FlexUI")
 include(":KevinEngine-Math")
 include(":KevinEngine-Renderer")

@@ -4,11 +4,12 @@ import io.github.daylightnebula.kevinengine.AppInfo
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
+import io.github.daylightnebula.kevinengine.mainWorld
 import io.github.daylightnebula.kevinengine.math.*
 
-val meshQuery = Query(PrimitiveMaterial::class, PrimitiveMesh::class, TransformComponent::class, VisibilityComponent::class)
-open class PrimitiveMesh(var collection: BufferCollection?): Component
-open class PrimitiveMaterial(val map: HashMap<String, Any>): Component
+val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
+data class Mesh(var collection: BufferCollection?): Component
+data class Material(val map: HashMap<String, Any>): Component
 
 val cameraQuery = Query(Camera::class, TransformComponent::class)
 data class Camera(val fov: Float, val aspectRatio: Float, val near: Float, val far: Float): Component
@@ -26,7 +27,7 @@ fun renderer(info: AppInfo) = module(
         startRender()
         meshQuery.query().forEach {
             // filter components
-            val list = it.components.filter { it is PrimitiveMaterial || it is PrimitiveMesh || it is TransformComponent || it is VisibilityComponent }
+            val list = it.components.filter { it is Material || it is Mesh || it is TransformComponent || it is VisibilityComponent }
 
             // stop if not visible
             if (!(list[3] as VisibilityComponent).visibility) return@forEach
@@ -36,12 +37,12 @@ fun renderer(info: AppInfo) = module(
             val matrix = perspectiveMatrix * viewMatrix * transform
 
             // get buffer collection and shader
-            val collection = (list[1] as PrimitiveMesh).collection ?: return@forEach
+            val collection = (list[1] as Mesh).collection ?: return@forEach
             val shader = collection.shader
             shader.setUniformMat4("mvp", matrix)
 
             // apply material
-            val materialMap = (list[0] as PrimitiveMaterial).map
+            val materialMap = (list[0] as Material).map
             materialMap.forEach { (name, obj) ->
                 when(obj) {
                     is Float -> shader.setUniformFloat(name, obj)
