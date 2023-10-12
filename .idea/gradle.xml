@@ -10,11 +10,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/KevinEngine-App" />
-            <option value="$PROJECT_DIR$/KevinEngine-Assets" />
-            <option value="$PROJECT_DIR$/KevinEngine-FlexUI" />
-            <option value="$PROJECT_DIR$/KevinEngine-Math" />
-            <option value="$PROJECT_DIR$/KevinEngine-Renderer" />
+            <option value="$PROJECT_DIR$/kevinengine-app" />
+            <option value="$PROJECT_DIR$/kevinengine-assets" />
+            <option value="$PROJECT_DIR$/kevinengine-math" />
+            <option value="$PROJECT_DIR$/kevinengine-renderer" />
+            <option value="$PROJECT_DIR$/kevinengine-ui" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -37,7 +37,7 @@ class QuadTest {
     )
 
     val info = AppInfo(
-        "KevinEngine-RendererTester",
+        "kevinengine-rendererTester",
         Float4(0f, 0f, 0f, 1f)
     )
 

@@ -40,7 +40,7 @@ class TexturedQuadTest {
     )
 
     val info = AppInfo(
-        "KevinEngine-RendererTesterTextured",
+        "kevinengine-rendererTesterTextured",
         Float4(0f, 0f, 0f, 1f)
     )
 

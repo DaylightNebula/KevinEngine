@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-    commonMainImplementation(project(":KevinEngine-Math"))
-    commonMainImplementation(project(":KevinEngine-App"))
+    commonMainImplementation(project(":kevinengine-math"))
+    commonMainImplementation(project(":kevinengine-app"))
 }
 
 kotlin {
