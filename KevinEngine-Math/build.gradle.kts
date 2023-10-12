@@ -12,4 +12,8 @@ kotlin {
         binaries.executable()
     }
     jvm()
+
+    sourceSets {
+        val jvmTest by getting
+    }
 }
