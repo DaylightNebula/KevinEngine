@@ -34,13 +34,12 @@ class TrainTest {
                 }
 
                 // create cube
-                val entity = entity(
+                entity(
                     TransformComponent(),
                     VisibilityComponent(),
                     ObjModel("SM_Veh_Carriage_Logs_01_tri"),
                     Material(hashMapOf("diffuse" to texture))
-                )
-                entity.spawn()
+                ).spawn()
 
                 // create camera
                 entity(

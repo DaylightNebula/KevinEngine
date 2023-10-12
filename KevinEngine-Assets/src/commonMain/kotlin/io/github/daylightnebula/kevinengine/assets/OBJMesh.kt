@@ -47,7 +47,7 @@ internal val loadObjs = system {
                             val faceIndex = faceIndices[i]
                             val vertex = vertices[faceIndex.first - 1]
                             val uv = uvs[faceIndex.second - 1]
-                            finalVertices.addAll(listOf(vertex.x / 4f, vertex.y / 4f, vertex.z / 4f))
+                            finalVertices.addAll(listOf(vertex.x, vertex.y, vertex.z))
                             finalUVs.addAll(listOf(uv.x, 1f - uv.y))
                             println("UV $uv")
                         }
