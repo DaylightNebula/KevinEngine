@@ -1,1 +1,0 @@
-build: ./gradlew build -x jsTest -x jvmTest -x jsBrowserTest publishToMavenLocal
