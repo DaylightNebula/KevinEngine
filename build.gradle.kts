@@ -35,8 +35,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/DaylightNebula/KevinEngine")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = project.findProperty("github.username") as? String ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("github.token") as? String ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }

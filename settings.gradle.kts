@@ -9,7 +9,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "KevinEngine"
+rootProject.name = "kevinengine"
 include(":KevinEngine-App")
 include(":KevinEngine-Assets")
 include(":KevinEngine-FlexUI")
