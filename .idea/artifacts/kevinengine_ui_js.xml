@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kevinengine-ui-js">
+    <output-path>$PROJECT_DIR$/kevinengine-ui/build/libs</output-path>
+    <root id="archive" name="kevinengine-ui-js.jar">
+      <element id="module-output" name="kevinengine.kevinengine-ui.jsMain" />
+    </root>
+  </artifact>
+</component>

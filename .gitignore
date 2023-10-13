@@ -47,3 +47,5 @@ kotlin-js-store
 *.png
 *.mtl
 *.jpg
+*.gltf
+*.glb

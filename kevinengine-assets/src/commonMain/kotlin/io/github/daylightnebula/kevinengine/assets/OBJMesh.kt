@@ -15,6 +15,7 @@ internal val loadObjs = system {
     objQuery.query().forEach { entity ->
         val model = entity.components.first { it is ObjModel } as ObjModel
 
+        entity.remove(ObjModel::class)
         asyncTextFile("/${model.path}.obj") { text ->
             // setup data lists
             val vertices = mutableListOf<Float3>()
@@ -76,11 +77,7 @@ internal val loadObjs = system {
             )
 
             // create a buffer collection and add mesh to entity
-            entity.modComponents { components ->
-                println("Performing swap")
-                components.removeAll { it is ObjModel }
-                components.add(mesh)
-            }
+            entity.insert(mesh)
         }
     }
 }

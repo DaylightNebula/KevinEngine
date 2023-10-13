@@ -1,5 +1,6 @@
 plugins {
     `maven-publish`
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 group = "io.github.daylightnebula"
@@ -7,6 +8,7 @@ version = "0.0.1"
 
 subprojects {
     apply(plugin = "maven-publish")
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
     publishing {
         repositories {
             maven {

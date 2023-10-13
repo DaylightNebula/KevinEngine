@@ -1,6 +1,7 @@
 import io.github.daylightnebula.kevinengine.AppInfo
 import io.github.daylightnebula.kevinengine.assets.ObjModel
 import io.github.daylightnebula.kevinengine.assets.assets
+import io.github.daylightnebula.kevinengine.assets.gltf.GltfModel
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.entity
@@ -20,7 +21,7 @@ import io.github.daylightnebula.kevinengine.stopApp
 import io.github.daylightnebula.kevinengine.window
 import kotlin.test.Test
 
-class TrainTest {
+class TrainTestGltf {
     val info = AppInfo("ObjTest", clearColor = Float4(0f, 0f, 0f, 1f))
     val texture = Texture("/SimpleTrains_Texture_01.png")
 
@@ -37,7 +38,7 @@ class TrainTest {
                 entity(
                     TransformComponent(scale = Float3(0.25f)),
                     VisibilityComponent(),
-                    ObjModel("SM_Veh_Carriage_Logs_01_tri"),
+                    GltfModel("traincar"),
                     Material(hashMapOf("diffuse" to texture))
                 ).spawn()
 
