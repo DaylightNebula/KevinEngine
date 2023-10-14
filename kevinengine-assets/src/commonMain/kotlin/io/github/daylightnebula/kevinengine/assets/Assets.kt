@@ -1,8 +1,12 @@
 package io.github.daylightnebula.kevinengine.assets
 
 import io.github.daylightnebula.kevinengine.assets.gltf.gltfLoader
+import io.github.daylightnebula.kevinengine.ecs.Component
 import io.github.daylightnebula.kevinengine.ecs.module
+import io.github.daylightnebula.kevinengine.ecs.system
 import io.github.daylightnebula.kevinengine.renderer.ShaderProgram
+
+data class Model(val path: String): Component
 
 val modelShader = ShaderProgram(
     "builtin_obj",
@@ -12,5 +16,8 @@ val modelShader = ShaderProgram(
 )
 
 fun assets() = module(
+    startSystems = listOf(system { runKAssetConversion() }),
     updateSystems = listOf(loadObjs, gltfLoader)
 )
+
+expect fun runKAssetConversion()

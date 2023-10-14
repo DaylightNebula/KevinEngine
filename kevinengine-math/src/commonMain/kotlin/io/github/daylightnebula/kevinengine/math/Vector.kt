@@ -18,6 +18,7 @@
 
 package io.github.daylightnebula.kevinengine.math
 
+import kotlinx.serialization.Serializable
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -31,6 +32,7 @@ enum class VectorComponent {
     S, T, P, Q
 }
 
+@kotlinx.serialization.Serializable
 data class Float2(var x: Float = 0.0f, var y: Float = 0.0f) {
     constructor(v: Float) : this(v, v)
     constructor(v: Float2) : this(v.x, v.y)
@@ -153,6 +155,7 @@ data class Float2(var x: Float = 0.0f, var y: Float = 0.0f) {
     fun toFloatArray() = floatArrayOf(x, y)
 }
 
+@Serializable
 data class Float3(var x: Float = 0.0f, var y: Float = 0.0f, var z: Float = 0.0f) {
     constructor(v: Float) : this(v, v, v)
     constructor(v: Float2, z: Float = 0.0f) : this(v.x, v.y, z)
@@ -343,6 +346,7 @@ data class Float3(var x: Float = 0.0f, var y: Float = 0.0f, var z: Float = 0.0f)
     fun toFloatArray() = floatArrayOf(x, y, z)
 }
 
+@Serializable
 data class Float4(
         var x: Float = 0.0f,
         var y: Float = 0.0f,
