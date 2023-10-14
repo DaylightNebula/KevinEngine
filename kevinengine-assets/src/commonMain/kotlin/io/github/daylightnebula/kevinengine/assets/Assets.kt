@@ -17,7 +17,7 @@ val modelShader = ShaderProgram(
 
 fun assets() = module(
     startSystems = listOf(system { runKAssetConversion() }),
-    updateSystems = listOf(loadObjs, gltfLoader)
+    updateSystems = listOf(loadObjs, gltfLoader, loadModelComponents)
 )
 
 expect fun runKAssetConversion()

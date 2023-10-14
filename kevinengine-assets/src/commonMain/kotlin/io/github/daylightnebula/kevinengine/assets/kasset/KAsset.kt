@@ -6,10 +6,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-const val chunkSplit = "\n"
-const val keyValueSplit = ":"
-const val elementSplit = ";"
-
 @Serializable
 class KAsset(val meshes: Array<KMesh>)
 @Serializable

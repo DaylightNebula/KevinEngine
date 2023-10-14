@@ -11,6 +11,7 @@ interface Component
 fun entity(vararg components: Component) = Entity(null, components.toMutableList())
 
 class Entity(parentNode: Node?, val internalComponents: MutableList<Component>) {
+    var spawned = false
     val components: List<Component> get() = internalComponents
     var parentNode: Node? = parentNode
         internal set
@@ -27,8 +28,8 @@ class Entity(parentNode: Node?, val internalComponents: MutableList<Component>) 
     }
 
     override fun toString(): String = components.map { it::class.simpleName!! }.toString()
-    fun spawn(world: World = mainWorld) = world.insert(this)
-    fun despawn(world: World = mainWorld) = world.remove(this)
+    fun spawn(world: World = mainWorld) { world.insert(this); spawned = true }
+    fun despawn(world: World = mainWorld) { world.remove(this); spawned = false }
     fun insert(vararg components: Component, world: World = mainWorld) =
         modComponents(world) { it.addAll(components) }
     fun remove(vararg components: KClass<*>, world: World = mainWorld) =
