@@ -38,7 +38,8 @@ class TrainTestLoader {
                 entity(
                     TransformComponent(scale = Float3(0.25f)),
                     VisibilityComponent(),
-                    Model("traincar")
+                    Model("SM_Veh_Carriage_Logs_01_tri"),
+                    Material(hashMapOf("diffuse" to texture))
                 ).spawn()
 
                 // create camera

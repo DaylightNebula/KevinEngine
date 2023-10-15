@@ -1,9 +1,5 @@
 package io.github.daylightnebula.kevinengine.assets
 
-import io.github.daylightnebula.kevinengine.assets.kasset.KAsset
-import io.github.daylightnebula.kevinengine.assets.kasset.KMesh
-import io.github.daylightnebula.kevinengine.assets.kasset.KMeshPoint
-import io.github.daylightnebula.kevinengine.assets.kasset.serializeKAsset
 import io.github.daylightnebula.kevinengine.math.Float2
 import io.github.daylightnebula.kevinengine.math.Float3
 import org.lwjgl.assimp.AIMesh
@@ -22,6 +18,7 @@ fun recursivelyConvertKAsset(root: File) {
     val directories = globalList.filter { it.isDirectory }
     val assetFiles = globalList.filter { it.extension == "kasset" }.map { it.nameWithoutExtension }
     val modelFiles = globalList.filter { validAssimpFiles.contains(it.extension) && !assetFiles.contains(it.nameWithoutExtension) }
+    println("Replacing ${modelFiles.size}")
 
     // run directory operations
     directories.forEach { recursivelyConvertKAsset(it) }
@@ -69,6 +66,6 @@ fun recursivelyConvertKAsset(root: File) {
 
         // serialize as save KAsset
         val text = serializeKAsset(KAsset(meshes))
-        File(root, "${file.nameWithoutExtension}.kasset").writeText(text)
+        File(root, "${file.nameWithoutExtension}.kasset").writeBytes(text)
     }
 }

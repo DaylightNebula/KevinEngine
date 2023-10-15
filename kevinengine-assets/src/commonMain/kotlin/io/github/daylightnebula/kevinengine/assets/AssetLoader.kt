@@ -1,12 +1,13 @@
 package io.github.daylightnebula.kevinengine.assets
 
 import io.github.daylightnebula.kevinengine.app
-import io.github.daylightnebula.kevinengine.assets.kasset.KAsset
-import io.github.daylightnebula.kevinengine.assets.kasset.deserializeKAsset
+import io.github.daylightnebula.kevinengine.asyncBinFile
 import io.github.daylightnebula.kevinengine.asyncTextFile
 import io.github.daylightnebula.kevinengine.ecs.Entity
 import io.github.daylightnebula.kevinengine.ecs.Query
 import io.github.daylightnebula.kevinengine.ecs.system
+import io.github.daylightnebula.kevinengine.math.Float3
+import io.github.daylightnebula.kevinengine.renderer.*
 
 val loadedAssets = hashMapOf<String, KAsset>()
 val applyAssets = hashMapOf<String, MutableList<Entity>>()
@@ -17,37 +18,61 @@ val loadModelComponents = system {
     query.query().forEach { entity ->
         // grab and remove model component
         val model = entity.components.first { it is Model } as Model
+        val path = "../assets/${model.path}.kasset"
         entity.remove(Model::class)
 
         // if this asset is loaded, apply it
-        if (loadedAssets.containsKey(model.path))
-            applyKAssetToEntity(entity, loadedAssets[model.path]!!)
+        if (loadedAssets.containsKey(path))
+            applyKAssetToEntity(entity, loadedAssets[path]!!, path)
         else {
             // add to apply assets list
-            var list = applyAssets[model.path]
+            var list = applyAssets[path]
             if (list == null) {
                 list = mutableListOf()
-                applyAssets[model.path] = list
+                applyAssets[path] = list
             }
             list.add(entity)
 
             // if this asset is load being loaded, start async load
-            if (!loading.contains(model.path)) {
-                loading.add(model.path)
-                asyncTextFile(model.path) { text ->
+            if (!loading.contains(path)) {
+                loading.add(path)
+                asyncBinFile(path) { text ->
                     // deserialize and save new asset
                     val asset = deserializeKAsset(text)
-                    loadedAssets[model.path] = asset
+                    loadedAssets[path] = asset
 
                     // apply asset to all waiting entities
-                    applyAssets[model.path]?.forEach { entity -> applyKAssetToEntity(entity, asset) }
-                    applyAssets.remove(model.path)
+                    applyAssets[path]?.forEach { entity -> applyKAssetToEntity(entity, asset, path) }
+                    applyAssets.remove(path)
                 }
             }
         }
     }
 }
 
-fun applyKAssetToEntity(entity: Entity, asset: KAsset) {
-    TODO("Apply k asset to entity!")
+fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
+    // get mesh and generate some final arrays
+    val mesh = asset.meshes.firstOrNull() ?: throw IllegalArgumentException("")
+    val positions = FloatArray(mesh.indices.size * 3)
+    val uvs = FloatArray(mesh.indices.size * 2)
+
+    // use indices to fill above arrays
+    repeat(mesh.indices.size) { idx ->
+        val index = mesh.indices[idx]
+        val point = mesh.points[index]
+
+        positions[index * 3 + 0] = point.vertex.x
+        positions[index * 3 + 1] = point.vertex.y
+        positions[index * 3 + 2] = point.vertex.z
+        uvs[index * 2 + 0] = point.uvs.x
+        uvs[index * 2 + 1] = 1f - point.uvs.y
+    }
+
+    // insert mesh
+    entity.insert(Mesh(bufferCollection(
+        modelShader,
+        RenderShapeType.TRIANGLES,
+        metadata("position", 0, 3) to genBuffer(*positions),
+        metadata("uvs", 1, 2) to genBuffer(*uvs)
+    )))
 }
