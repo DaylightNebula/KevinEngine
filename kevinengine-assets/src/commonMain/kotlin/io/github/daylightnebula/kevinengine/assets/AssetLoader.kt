@@ -65,7 +65,7 @@ fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
         positions[index * 3 + 1] = point.vertex.y
         positions[index * 3 + 2] = point.vertex.z
         uvs[index * 2 + 0] = point.uvs.x
-        uvs[index * 2 + 1] = 1f - point.uvs.y
+        uvs[index * 2 + 1] = point.uvs.y
     }
 
     // insert mesh
@@ -75,4 +75,10 @@ fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
         metadata("position", 0, 3) to genBuffer(*positions),
         metadata("uvs", 1, 2) to genBuffer(*uvs)
     )))
+
+//    if (asset.textures.isNotEmpty()) {
+//        val texture = asset.textures.first()
+//        entity.insert(Material(hashMapOf("diffuse" to Texture(texture.rgbaTexture, texture.width, texture.height))))
+//        println("Texture ${texture.rgbaTexture.toList()}")
+//    }
 }

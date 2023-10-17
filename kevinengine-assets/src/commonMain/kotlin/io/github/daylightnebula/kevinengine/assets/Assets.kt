@@ -22,14 +22,14 @@ val modelShader = ShaderProgram(
 )
 
 fun assets() = module(
-    startSystems = listOf(system { runKAssetConversion() }),
+    startSystems = listOf(system {}),
     updateSystems = listOf(loadObjs, gltfLoader, loadModelComponents)
 )
 
-expect fun runKAssetConversion()
-
 @Serializable
 class KAsset(val meshes: Array<KMesh>)
+
+// mesh
 @Serializable
 class KMesh(val points: Array<KMeshPoint>, val indices: Array<Int>)
 @Serializable

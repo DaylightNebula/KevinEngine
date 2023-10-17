@@ -1,5 +1,6 @@
 import io.github.daylightnebula.kevinengine.AppInfo
 import io.github.daylightnebula.kevinengine.assets.Model
+import io.github.daylightnebula.kevinengine.assets.ObjModel
 import io.github.daylightnebula.kevinengine.assets.assets
 import io.github.daylightnebula.kevinengine.assets.gltf.GltfModel
 import io.github.daylightnebula.kevinengine.components.TransformComponent
@@ -38,7 +39,7 @@ class TrainTestLoader {
                 entity(
                     TransformComponent(scale = Float3(0.25f)),
                     VisibilityComponent(),
-                    Model("SM_Veh_Carriage_Logs_01_tri"),
+                    ObjModel("SM_Veh_Carriage_Coal_01"),
                     Material(hashMapOf("diffuse" to texture))
                 ).spawn()
 

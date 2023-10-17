@@ -21,7 +21,6 @@ internal val loadObjs = system {
             val vertices = mutableListOf<Float3>()
             val normals = mutableListOf<Float3>()
             val uvs = mutableListOf<Float2>()
-            val faces = mutableListOf<Float3>()
 
             val finalVertices = mutableListOf<Float>()
             val finalUVs = mutableListOf<Float>()
@@ -44,21 +43,31 @@ internal val loadObjs = system {
                             Triple(subtokens[0].toInt(), subtokens[1].toInt(), subtokens[2].toInt())
                         }
 
+                        // some helper functions
                         val addFaceIndex: (index: Int) -> Unit = { i ->
                             val faceIndex = faceIndices[i]
                             val vertex = vertices[faceIndex.first - 1]
                             val uv = uvs[faceIndex.second - 1]
                             finalVertices.addAll(listOf(vertex.x, vertex.y, vertex.z))
                             finalUVs.addAll(listOf(uv.x, 1f - uv.y))
-                            println("UV $uv")
+                        }
+                        val addIndices: (a: Int, b: Int, c: Int) -> Unit = { a, b, c ->
+                            addFaceIndex(a)
+                            addFaceIndex(b)
+                            addFaceIndex(c)
                         }
 
-                        // add mandatory three of face indices
-                        repeat(3) { addFaceIndex(it) }
-                        if (faceIndices.size > 3) repeat(faceIndices.size - 3) {
-                            addFaceIndex(it + 2)
-                            addFaceIndex(it + 1)
-                            addFaceIndex(it + 3)
+                        // generate all triangles in face
+                        repeat(faceIndices.size - 2) { idx ->
+                            val defaultA = (idx / 3) * 3        // hacky integer division to step by 3s
+                            val defaultB = (idx / 3) * 3 + 1
+                            val defaultC = (idx / 3) * 3 + 2
+
+                            when(idx % 3) {
+                                0 -> addIndices(defaultA, defaultB, defaultC)
+                                1 -> addIndices(defaultA, defaultB + 1, defaultC + 1)
+                                2 -> addIndices(defaultA + 3, defaultB + 1, defaultC + 2)
+                            }
                         }
                     }
 
