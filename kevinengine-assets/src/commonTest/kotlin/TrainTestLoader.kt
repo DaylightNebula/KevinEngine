@@ -25,6 +25,7 @@ import kotlin.test.Test
 class TrainTestLoader {
     val info = AppInfo("ObjTest", clearColor = Float4(0f, 0f, 0f, 1f))
     val texture = Texture("/SimpleTrains_Texture_01.png")
+    // https://github.com/bevyengine/bevy/tree/main/crates/bevy_gltf/src
 
     @Test
     fun test() = run(
