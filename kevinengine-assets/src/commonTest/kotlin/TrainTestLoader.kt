@@ -39,7 +39,7 @@ class TrainTestLoader {
                 entity(
                     TransformComponent(scale = Float3(0.25f)),
                     VisibilityComponent(),
-                    ObjModel("SM_Veh_Carriage_Coal_01"),
+                    GltfModel("traincar"),
                     Material(hashMapOf("diffuse" to texture))
                 ).spawn()
 

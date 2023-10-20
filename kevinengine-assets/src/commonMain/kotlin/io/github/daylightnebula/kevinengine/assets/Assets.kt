@@ -1,6 +1,6 @@
 package io.github.daylightnebula.kevinengine.assets
 
-import io.github.daylightnebula.kevinengine.assets.gltf.gltfLoader
+import io.github.daylightnebula.kevinengine.assets.gltf.loadGltfs
 import io.github.daylightnebula.kevinengine.ecs.Component
 import io.github.daylightnebula.kevinengine.ecs.module
 import io.github.daylightnebula.kevinengine.ecs.system
@@ -23,7 +23,7 @@ val modelShader = ShaderProgram(
 
 fun assets() = module(
     startSystems = listOf(system {}),
-    updateSystems = listOf(loadObjs, gltfLoader, loadModelComponents)
+    updateSystems = listOf(loadObjs, loadGltfs, loadModelComponents)
 )
 
 @Serializable

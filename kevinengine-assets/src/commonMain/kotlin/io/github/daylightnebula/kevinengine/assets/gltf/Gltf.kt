@@ -1,9 +1,12 @@
-package io.github.daylightnebula.kevinengine.assets
+package io.github.daylightnebula.kevinengine.assets.gltf
 
 import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.Float4
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+
+val gltfJson = Json { ignoreUnknownKeys = true }
 
 @Serializable
 data class Gltf(
@@ -65,12 +68,12 @@ data class GltfMaterial(
 )
 @Serializable
 data class GltfPbrMetallicRoughness(
-    val baseColorFactor: Float4 = Float4(1f),
+    val baseColorFactor: List<Float> = listOf(1f, 1f, 1f),
     val baseColorTexture: GltfTextureInfo? = null,
     val metallicRoughnessTexture: GltfTextureInfo? = null,
     val metallicFactor: Float = 1f,
     val roughnessFactor: Float = 1f,
-    val extras: JsonObject
+    val extras: JsonObject? = null
 )
 @Serializable
 data class GltfTextureInfo(
@@ -131,18 +134,24 @@ data class GltfSkin(
 // accessors
 @Serializable
 data class GltfAccessor(
-    val type: String,
+    val type: GltfAccessorType,
     val componentType: Int,
     val count: Int,
     val byteOffset: Int = 0,
     val normalized: Boolean = false,
     val sparse: GltfAccessorSparse? = null,
     val bufferView: Int? = null,
-    val max: List<Int> = listOf(),
-    val min: List<Int> = listOf(),
+    val max: List<Float> = listOf(),
+    val min: List<Float> = listOf(),
     val name: String? = null,
     val extras: JsonObject? = null
 )
+@Serializable
+enum class GltfAccessorType(val numElements: Int) {
+    SCALAR(1),
+    VEC2(2), VEC3(3), VEC4(4),
+    MAT2(4), MAT3(9), MAT4(16)
+}
 @Serializable
 data class GltfAccessorSparse(
     val count: Int,
