@@ -50,6 +50,29 @@ val loadGltfs = system {
                 val positions = attributes["POSITION"]!!.fromBuffers(buffers) as? Array<Float3> ?: throw IllegalArgumentException("Gltf positions must be array of vec3!")
                 val uvs = attributes["TEXCOORD_0"]!!.fromBuffers(buffers) as? Array<Float2> ?: throw IllegalArgumentException("Gltf uvs must be array of vec2!")
 
+                val addPosition: (pIdx: UShort) -> Unit = { pIdx ->
+                    val position = positions[pIdx.toInt()]
+                    fVertices.add(position.x)
+                    fVertices.add(position.y)
+                    fVertices.add(position.z)
+                }
+
+                val addUvs: (idx: UShort) -> Unit = { idx ->
+                    val uv = uvs[idx.toInt()]
+                    fUvs.add(uv.x)
+                    fUvs.add(uv.y)
+                }
+
+                // todo add to positions
+                // todo add to uvs
+                for (idx in indices.indices step 9) {
+                    addPosition(indices[idx])
+                    addUvs(indices[idx + 2])
+                    addPosition(indices[idx + 3])
+                    addUvs(indices[idx + 5])
+                    addPosition(indices[idx + 6])
+                    addUvs(indices[idx + 7])
+                }
                 println("Indices ${indices.size} : ${indices.toList().maxBy { it }} ${positions.size}")
             }
 
@@ -71,7 +94,7 @@ val loadGltfs = system {
 
 // get a slice of a byte array from a gltf accessor
 fun ByteArray.fromAccessor(accessor: GltfAccessor): ByteArray =
-    this.sliceArray(IntRange(accessor.byteOffset, accessor.byteOffset + (accessor.count) - 1)) // todo account for total byte count
+    this.sliceArray(IntRange(accessor.byteOffset, accessor.byteOffset + (accessor.count * accessor.type.numElements * accessor.componentTypeSize()) - 1))
 
 // turns a byte array into an array specified by the given component type
 fun ByteArray.convertToAccessorComponentType(type: Int): Array<*> = when(type) {
@@ -81,6 +104,13 @@ fun ByteArray.convertToAccessorComponentType(type: Int): Array<*> = when(type) {
     5123 -> Array(size / 2) { idx -> (this[idx * 2].toUByte().toInt() + (this[(idx * 2) + 1].toInt() shl 8)).toUShort() }
     5125 -> Array(size / 4) { idx -> this[idx * 4].toUInt() + (this[idx * 4 + 1].toUInt() shl 8) + (this[idx * 4 + 2].toUInt() shl 16) + (this[idx * 4 + 3].toUInt() shl 24) }
     5126 -> Array(size / 4) { idx -> Float.fromBits(this[idx * 4].toInt() + (this[idx * 4 + 1].toInt() shl 8) + (this[idx * 4 + 2].toInt() shl 16) + (this[idx * 4 + 3].toInt() shl 24)) }
+    else -> throw IllegalArgumentException("Illegal accessor component type $type")
+}
+
+fun GltfAccessor.componentTypeSize() = when(componentType) {
+    5120, 5121 -> 1
+    5122, 5123 -> 2
+    5125, 5126 -> 4
     else -> throw IllegalArgumentException("Illegal accessor component type $type")
 }
 

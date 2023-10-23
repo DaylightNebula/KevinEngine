@@ -14,7 +14,7 @@ data class BufferCollection(val shader: ShaderProgram, val renderShape: RenderSh
         }
 
         // draw attached
-        drawAttachedRaw(shader, buffers.values.first().length, renderShape)
+        drawAttachedRaw(shader, buffers.values.first().size, renderShape)
 
         // detach buffers
         repeat(buffers.size) { i -> detachBufferIndex(i) }
