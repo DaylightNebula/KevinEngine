@@ -18,7 +18,6 @@ actual fun setupRenderer(info: AppInfo) {
 actual fun startRender() = glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 actual fun endRender() = glFlush()
 
-
 // attaches the given buffer to be rendered
 actual fun attachBuffer(index: Int, metadata: BufferMetadata, buffer: Buffer) {
     // make sure vbo is initialized

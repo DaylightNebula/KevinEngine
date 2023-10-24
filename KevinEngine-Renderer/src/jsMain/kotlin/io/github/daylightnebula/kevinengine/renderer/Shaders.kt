@@ -62,12 +62,14 @@ actual class Shader actual constructor(actual val path: String, actual val type:
     }
 }
 
-actual class ShaderProgram actual constructor(actual val name: String, vertexPath: String, fragmentPath: String, actual val uniformsList: List<String>) {
+actual class ShaderProgram actual constructor(actual val name: String, vertexPath: String, fragmentPath: String) {
     private var id = -1
     private val vertexShader = Shader(vertexPath, ShaderType.VERTEX)
     private val fragmentShader = Shader(fragmentPath, ShaderType.FRAGMENT)
     private val uniforms = hashMapOf<String, Int>()
     private val uniformLocations = mutableListOf<WebGLUniformLocation>()
+    private val attributes = hashMapOf<String, Int>()
+//    private val attributeLocations = mutableListOf<>()
 
     actual val isInitialized: Boolean
         get() = id != -1
@@ -99,14 +101,23 @@ actual class ShaderProgram actual constructor(actual val name: String, vertexPat
         shaderPrograms.add(program)
 
         // load uniforms
-        uniformsList.forEach { uniform ->
-            val location = gl.getUniformLocation(program, uniform)
-                ?: throw IllegalArgumentException("Failed to get uniform $uniform")
-            uniforms[uniform] = uniformLocations.size
-            uniformLocations.add(location)
+        val uniformCount = gl.getProgramParameter(program, GL.ACTIVE_UNIFORMS) as Int
+        repeat(uniformCount) { idx ->
+            val info = gl.getActiveUniform(program, idx) ?: return@repeat
+            val uniformID = gl.getUniformLocation(program, info.name)
+                ?: throw IllegalArgumentException("Failed to get uniform ${info.name}")
+            uniforms[info.name] = uniformLocations.size
+            uniformLocations.add(uniformID)
+            println("Uniform $uniformID $name")
         }
 
-        println("Loaded $name")
+        // load attributes
+        val attribCount = gl.getProgramParameter(program, GL.ACTIVE_ATTRIBUTES) as Int
+        repeat(attribCount) { idx ->
+            val info = gl.getActiveUniform(program, idx) ?: return@repeat
+            val attribID = gl.getAttribLocation(program, info.name)
+            attributes[info.name] = attribID
+        }
     }
 
     actual fun get(): Int {
@@ -144,4 +155,11 @@ actual class ShaderProgram actual constructor(actual val name: String, vertexPat
         gl.bindTexture(GL.TEXTURE_2D, textures[value.get()])
         gl.uniform1i(getUniformLocation(name), 0)        // assign texture to texture unit 0
     }
+
+    actual fun getAttributes(): Map<String, Int> {
+        if (!isInitialized) load()
+        return attributes
+    }
+    actual fun getAttribute(name: String) = attributes[name]
+        ?: throw IllegalArgumentException("No attribute with name $name registered!")
 }

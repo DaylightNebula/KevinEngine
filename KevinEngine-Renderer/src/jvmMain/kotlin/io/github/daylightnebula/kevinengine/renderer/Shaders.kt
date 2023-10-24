@@ -4,8 +4,11 @@ import io.github.daylightnebula.kevinengine.math.Float2
 import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.math.Mat4
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
-import java.lang.IllegalArgumentException
+import java.nio.ByteBuffer
+import java.nio.IntBuffer
+import java.nio.charset.Charset
 import kotlin.system.exitProcess
 
 actual class Shader actual constructor(actual val path: String, actual val type: ShaderType) {
@@ -52,8 +55,7 @@ actual class Shader actual constructor(actual val path: String, actual val type:
 actual class ShaderProgram actual constructor(
     actual val name: String,
     vertexPath: String,
-    fragmentPath: String,
-    actual val uniformsList: List<String>
+    fragmentPath: String
 ) {
     // id of this shader program
     private var id = -1
@@ -62,8 +64,9 @@ actual class ShaderProgram actual constructor(
     private val vertexShader = Shader(vertexPath, ShaderType.VERTEX)
     private val fragmentShader = Shader(fragmentPath, ShaderType.FRAGMENT)
 
-    // uniforms
+    // uniforms and attribs
     private val uniforms = hashMapOf<String, Int>()
+    private val attributes = hashMapOf<String, Int>()
 
     actual val isInitialized: Boolean
         get() = id != -1
@@ -108,9 +111,55 @@ actual class ShaderProgram actual constructor(
         glDeleteShader(vertID)
         glDeleteShader(fragID)
 
-        // load uniforms
-        uniformsList.forEach { uniform ->
-            uniforms[uniform] = glGetUniformLocation(id, uniform)
+        // get uniform metadata
+        val uniformCount = glGetProgrami(id, GL_ACTIVE_UNIFORMS)
+        val uniformStrLength = glGetProgrami(id, GL_ACTIVE_UNIFORM_MAX_LENGTH)
+
+        // create buffers
+        val nameBuf = BufferUtils.createByteBuffer(uniformStrLength)
+        val lengthBuf = BufferUtils.createIntBuffer(1)
+        val sizeBuf = BufferUtils.createIntBuffer(1)
+        val typeBuf = BufferUtils.createIntBuffer(1)
+
+        // load all uniforms
+        repeat(uniformCount) { idx -> // length size type name
+            // if not first uniform, clear buffers
+            if (idx != 0) {
+                nameBuf.clear()
+                lengthBuf.clear()
+                sizeBuf.clear()
+                typeBuf.clear()
+            }
+
+            // read name and its length from the shader
+            glGetActiveUniform(id, idx, lengthBuf, sizeBuf, typeBuf, nameBuf)
+
+            // save the uniform
+            val name = Charset.defaultCharset().decode(nameBuf).subSequence(0, lengthBuf.get()).toString()
+            val uniformID = glGetUniformLocation(id, name)
+            uniforms[name] = uniformID
+            println("Uniform $uniformID $name")
+        }
+
+        // load attributes
+        val attribCount = glGetProgrami(id, GL_ACTIVE_ATTRIBUTES)
+        val attribStrLength = glGetProgrami(id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
+        val attribNameBuf = BufferUtils.createByteBuffer(attribStrLength)
+        repeat(attribCount) { idx ->
+            // clear buffers
+            attribNameBuf.clear()
+            lengthBuf.clear()
+            sizeBuf.clear()
+            typeBuf.clear()
+
+            // read name and length
+            glGetActiveAttrib(id, idx, lengthBuf, sizeBuf, typeBuf, attribNameBuf)
+
+            // save attrib
+            val name = Charset.defaultCharset().decode(attribNameBuf).subSequence(0, lengthBuf.get()).toString()
+            val attribLocation = glGetAttribLocation(id, name)
+            attributes[name] = attribLocation
+            println("Attribute $attribLocation $name")
         }
     }
 
@@ -136,4 +185,11 @@ actual class ShaderProgram actual constructor(
         glBindTexture(GL_TEXTURE_2D, value.get())   // bind texture
         glUniform1i(getUniform(name), 0)        // assign texture to texture unit 0
     }
+
+    actual fun getAttributes(): Map<String, Int> {
+        if (!isInitialized) load()
+        return attributes
+    }
+    actual fun getAttribute(name: String) = attributes[name]
+        ?: throw IllegalArgumentException("No attribute with name $name registered!")
 }

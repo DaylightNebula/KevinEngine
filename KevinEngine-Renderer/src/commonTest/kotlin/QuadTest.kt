@@ -16,8 +16,7 @@ class QuadTest {
     val shader = ShaderProgram(
         "base",
         "/quad_vert.glsl",
-        "/quad_frag.glsl",
-        listOf("mvp")
+        "/quad_frag.glsl"
     )
     val buffers = bufferCollection(
         shader,

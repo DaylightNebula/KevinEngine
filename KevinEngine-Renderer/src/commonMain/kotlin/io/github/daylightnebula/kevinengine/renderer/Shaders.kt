@@ -15,9 +15,8 @@ expect class Shader(path: String, type: ShaderType) {
     fun get(): Int
 }
 
-expect class ShaderProgram(name: String, vertexPath: String, fragmentPath: String, uniformsList: List<String>) {
+expect class ShaderProgram(name: String, vertexPath: String, fragmentPath: String) {
     val name: String
-    val uniformsList: List<String>
     val isInitialized: Boolean
     fun load()
     fun get(): Int
@@ -31,4 +30,8 @@ expect class ShaderProgram(name: String, vertexPath: String, fragmentPath: Strin
     fun setUniformVec4(name: String, value: Float4)
     fun setUniformMat4(name: String, value: Mat4)
     fun setUniformTex(name: String, value: Texture)
+
+    // attributes
+    fun getAttributes(): Map<String, Int>
+    fun getAttribute(name: String): Int
 }

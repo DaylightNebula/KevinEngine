@@ -18,8 +18,7 @@ class TexturedQuadTest {
     val shader = ShaderProgram(
         "base",
         "/texquad_vert.glsl",
-        "/texquad_frag.glsl",
-        listOf("mvp", "tex0")
+        "/texquad_frag.glsl"
     )
     val texture = Texture("/flowers.jpg")
     val buffers = bufferCollection(
@@ -59,6 +58,11 @@ class TexturedQuadTest {
                     VisibilityComponent(),
                     Mesh(buffers),
                     Material(hashMapOf("tex0" to texture))
+                ).spawn()
+
+                entity(
+                    Camera(45f, 1280f/720f, 0.1f, 100f),
+                    TransformComponent(position = Float3(0f, 0f, -1f))
                 ).spawn()
             })
         )

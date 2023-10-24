@@ -44,8 +44,7 @@ class CubeTest {
         ShaderProgram(
             "cube",
             "/cube_vert.glsl",
-            "/cube_frag.glsl",
-            listOf("mvp")
+            "/cube_frag.glsl"
         ),
         RenderShapeType.TRIANGLES,
         metadata("positions", 0, 3) to genBuffer(
