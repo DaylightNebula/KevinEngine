@@ -19,6 +19,7 @@ expect class ShaderProgram(name: String, vertexPath: String, fragmentPath: Strin
     val name: String
     val isInitialized: Boolean
     fun load()
+    fun use()
     fun get(): Int
 
     // uniform stuff

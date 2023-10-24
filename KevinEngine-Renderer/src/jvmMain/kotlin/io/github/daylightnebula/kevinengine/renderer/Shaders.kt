@@ -77,6 +77,8 @@ actual class ShaderProgram actual constructor(
         return id
     }
 
+    actual fun use() { if (isInitialized) glUseProgram(id) }
+
     // function to generate this shader program
     actual fun load() {
         println("Generating shader program!")

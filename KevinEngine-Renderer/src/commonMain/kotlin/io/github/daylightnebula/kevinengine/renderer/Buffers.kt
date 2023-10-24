@@ -5,13 +5,20 @@ package io.github.daylightnebula.kevinengine.renderer
 const val ARRAY_BUFFER = 0x8892
 const val ELEMENT_ARRAY_BUFFER = 0x8893
 
+fun metadata(name: String, entrySize: Int) = BufferMetadata(name, entrySize)
+data class BufferMetadata(val name: String, val entrySize: Int)
+
 // functions to be abstracted to various platforms
 expect fun createBuffer(): Int
+expect fun enableBuffer(id: Int)
+expect fun disableBuffer(id: Int)
+expect fun clearBuffer(type: Int)
 expect fun bindBuffer(id: Int, type: Int)
 expect fun uploadData(id: Int, type: Int, array: FloatArray)
 expect fun uploadData(id: Int, type: Int, array: IntArray)
 expect fun uploadData(id: Int, type: Int, array: ShortArray)
 expect fun uploadData(id: Int, type: Int, array: ByteArray)
+expect fun attachBuffer(index: Int, entrySize: Int, buffer: Buffer)
 
 // abstract buffer
 abstract class Buffer(val type: Int) {
@@ -20,15 +27,14 @@ abstract class Buffer(val type: Int) {
     abstract val size: Int
 
     abstract fun load0(id: Int)
-    internal fun load(): Int {
-        val id = createBuffer()
+    internal fun load() {
+        id = createBuffer()
         bindBuffer(id, type)
         load0(id)
-        return id
     }
 
     fun get(): Int {
-        if (id == -1) id = load()
+        if (id == -1) load()
         return id
     }
 }

@@ -74,6 +74,9 @@ actual class ShaderProgram actual constructor(actual val name: String, vertexPat
     actual val isInitialized: Boolean
         get() = id != -1
 
+
+    actual fun use() { if (isInitialized) gl.useProgram(shaderPrograms[id]) }
+
     actual fun load() {
         if (!vertexShader.isInitialized || !fragmentShader.isInitialized) {
             vertexShader.load()

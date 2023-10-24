@@ -2,6 +2,7 @@ import io.github.daylightnebula.kevinengine.AppInfo
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
+import io.github.daylightnebula.kevinengine.info
 import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.keyboard.Key
 import io.github.daylightnebula.kevinengine.keyboard.KeyEvent
@@ -21,20 +22,20 @@ class TexturedQuadTest {
         "/texquad_frag.glsl"
     )
     val texture = Texture("/flowers.jpg")
-    val buffers = bufferCollection(
-        shader,
-        RenderShapeType.QUADS,
-        metadata("positions", 0, 3) to genBuffer(
+    val buffers = indexedCollection(
+        shader, RenderShapeType.TRIANGLES,
+        shortArrayOf(0, 1, 2, 0, 2, 3),
+        metadata("vertexPosition_modelspace", 3) to genBuffer(
             -1f, -1f, 0f,
-            1f, -1f, 0f,
+            -1f, 1f, 0f,
             1f, 1f, 0f,
-            -1f, 1f, 0f
+            1f, -1f, 0f
         ),
-        metadata("colors", 1, 2) to genBuffer(
+        metadata("vertexUV", 2) to genBuffer(
             0f, 1f,
-            1f, 1f,
+            0f, 0f,
             1f, 0f,
-            0f, 0f
+            1f, 1f
         )
     )
 

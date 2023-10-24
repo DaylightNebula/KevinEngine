@@ -4,7 +4,6 @@ import io.github.daylightnebula.kevinengine.AppInfo
 import io.github.daylightnebula.kevinengine.components.TransformComponent
 import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
-import io.github.daylightnebula.kevinengine.mainWorld
 import io.github.daylightnebula.kevinengine.math.*
 
 val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
@@ -41,7 +40,7 @@ fun renderer(info: AppInfo) = module(
             val shader = collection.shader
             shader.setUniformMat4("mvp", matrix)
 
-            // apply material
+            // apply material (uniforms)
             val materialMap = (list[0] as Material).map
             materialMap.forEach { (name, obj) ->
                 when(obj) {
@@ -64,9 +63,11 @@ fun renderer(info: AppInfo) = module(
 expect fun setupRenderer(info: AppInfo)
 expect fun startRender()
 expect fun endRender()
+expect fun drawArrays(type: RenderShapeType, count: Int)
+expect fun drawIndexed(type: RenderShapeType, count: Int)
 
 enum class RenderShapeType { TRIANGLES, QUADS }
 
-expect fun attachBuffer(index: Int, metadata: BufferMetadata, buffer: Buffer)
-expect fun drawAttachedRaw(shader: ShaderProgram, count: Int, type: RenderShapeType)
-expect fun detachBufferIndex(index: Int)
+//expect fun attachBuffer(index: Int, metadata: BufferMetadataID, buffer: Buffer)
+//expect fun drawAttachedRaw(shader: ShaderProgram, count: Int, type: RenderShapeType)
+//expect fun detachBufferIndex(index: Int)
