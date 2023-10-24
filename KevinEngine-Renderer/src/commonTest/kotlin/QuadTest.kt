@@ -21,13 +21,13 @@ class QuadTest {
     val buffers = bufferCollection(
         shader,
         RenderShapeType.QUADS,
-        metadata("positions", 3) to genBuffer(
+        metadata("vertexPosition_modelspace", 3) to genBuffer(
             -1f, -1f, 0f,
             1f, -1f, 0f,
             1f, 1f, 0f,
             -1f, 1f, 0f
         ),
-        metadata("colors", 3) to genBuffer(
+        metadata("vertexColor", 3) to genBuffer(
             0.393f,  0.621f,  0.362f,
             0.673f,  0.211f,  0.457f,
             0.820f,  0.883f,  0.371f,
