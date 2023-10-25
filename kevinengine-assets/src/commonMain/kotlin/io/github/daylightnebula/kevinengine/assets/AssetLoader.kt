@@ -73,7 +73,7 @@ fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
     }
 
     // insert mesh
-    entity.insert(Mesh(bufferCollection(
+    entity.insert(mesh(bufferCollection(
         modelShader,
         RenderShapeType.TRIANGLES,
         metadata("vertexPosition_modelspace", 3) to genBuffer(*positions),

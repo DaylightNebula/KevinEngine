@@ -7,8 +7,9 @@ import io.github.daylightnebula.kevinengine.ecs.*
 import io.github.daylightnebula.kevinengine.math.*
 
 val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
-data class Mesh(var collection: BufferCollection?): Component
+data class Mesh(var collections: List<BufferCollection>): Component
 data class Material(val map: HashMap<String, Any>): Component
+fun mesh(vararg collections: BufferCollection) = Mesh(listOf(*collections))
 
 val cameraQuery = Query(Camera::class, TransformComponent::class)
 data class Camera(val fov: Float, val aspectRatio: Float, val near: Float, val far: Float): Component
@@ -36,8 +37,8 @@ fun renderer(info: AppInfo) = module(
             val matrix = perspectiveMatrix * viewMatrix * transform
 
             // get buffer collection and shader
-            val collection = (list[1] as Mesh).collection ?: return@forEach
-            val shader = collection.shader
+            val collections = (list[1] as Mesh).collections
+            val shader = collections.first().shader
             shader.setUniformMat4("mvp", matrix)
 
             // apply material (uniforms)
@@ -54,7 +55,7 @@ fun renderer(info: AppInfo) = module(
             }
 
             // do draw
-            collection.render()
+            collections.forEach { c -> c.render() }
         }
         endRender()
     })

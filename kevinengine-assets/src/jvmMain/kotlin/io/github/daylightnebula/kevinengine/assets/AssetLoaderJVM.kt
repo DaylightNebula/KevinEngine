@@ -4,6 +4,7 @@ import io.github.daylightnebula.kevinengine.ecs.Entity
 import io.github.daylightnebula.kevinengine.renderer.*
 import org.lwjgl.assimp.AIMesh
 import org.lwjgl.assimp.AITexel
+import org.lwjgl.assimp.AITexture
 import org.lwjgl.assimp.Assimp
 import org.lwjgl.system.MemoryUtil
 import java.lang.IllegalStateException
@@ -24,7 +25,6 @@ actual fun loadAssimpAsset(entity: Entity, text: String) {
     val scene = Assimp.aiImportFileFromMemory(
         data,
         Assimp.aiProcess_Triangulate or
-                Assimp.aiProcess_ValidateDataStructure or
                 Assimp.aiProcess_FlipUVs,
         "gltf"
     ) ?: throw IllegalStateException("Failed to load assimp scene!")
@@ -33,64 +33,58 @@ actual fun loadAssimpAsset(entity: Entity, text: String) {
     // load meshes
     val numMeshes = scene.mNumMeshes()
     val meshes = Array(numMeshes) { AIMesh.create(scene.mMeshes()!!.get(it)) }
-//    if (numMeshes != 1) throw IllegalStateException("Only one mesh supported for assimp loading right now!")
-//    val mesh = AIMesh.create(scene.mMeshes()!!.get())
+    val collections = mutableListOf<BufferCollection>()
 
-    // process mesh
-//    val vertices = mutableListOf<Float>()
-    val vertices = FloatArray(meshes.sumOf { mesh -> mesh.mNumVertices() } * 3)
-    var vIdx = 0
-    val textures = FloatArray(meshes.sumOf { mesh -> mesh.mTextureCoords(0)!!.remaining() } * 2)
-    var tIdx = 0
-    val normals = FloatArray(meshes.sumOf { mesh -> mesh.mNormals()!!.remaining() } * 3)
-    var nIdx = 0
-    val indices = IntArray(meshes.sumOf { mesh -> mesh.mNumFaces() * 3 })
-    var iIdx = 0
-    var indexOffset = 0
-
+    // for each mesh
     meshes.forEach { mesh ->
         // process vertices
+        val vertices = FloatArray(mesh.mNumVertices() * 3)
         val aiVertices = mesh.mVertices()
-        while (aiVertices.remaining() > 0) {
+        repeat(mesh.mNumVertices()) { vIdx ->
             val vertex = aiVertices.get()
             vertices[vIdx * 3] = vertex.x()
             vertices[vIdx * 3 + 1] = vertex.y()
             vertices[vIdx * 3 + 2] = vertex.z()
-            vIdx++
         }
 
         // process textures
         val aiTextures = mesh.mTextureCoords(0)!!
-        while (aiTextures.remaining() > 0) {
+        val textures = FloatArray(aiTextures.remaining() * 2)
+        repeat (aiTextures.remaining()) {tIdx ->
             val vertex = aiTextures.get()
             textures[tIdx * 2] = vertex.x()
             textures[tIdx * 2 + 1] = vertex.y()
-            tIdx++
         }
 
         // process normals
 
         // process indices
         val aiFaces = mesh.mFaces()
-        val curOffset = indexOffset
-        while (aiFaces.remaining() > 0) {
+        val indices = ShortArray(aiFaces.remaining() * 3)
+        repeat (indices.size / 3) { iIdx ->
+            // get face and indices
             val face = aiFaces.get()
             val aiIndices = face.mIndices()
-            while (aiIndices.remaining() > 0) {
-                indices[iIdx] = aiIndices.get() + curOffset
-                iIdx++
-            }
-            indexOffset++
+            if (aiIndices.remaining() != 3) throw IllegalStateException("Model not triangulated!")
+
+            // add indices
+            indices[iIdx * 3 + 0] = aiIndices.get().toShort()
+            indices[iIdx * 3 + 1] = aiIndices.get().toShort()
+            indices[iIdx * 3 + 2] = aiIndices.get().toShort()
         }
+        println("Highest index ${indices.maxBy { it }} with vertices ${vertices.size / 3} ${textures.size / 2}")
+
+        // create collection
+        collections.add(
+            indexedCollection(
+                modelShader, RenderShapeType.TRIANGLES,
+                indices,
+                metadata("vertexPosition_modelspace", 3) to FloatBuffer(ARRAY_BUFFER, vertices),
+                metadata("vertexUV", 2) to FloatBuffer(ARRAY_BUFFER, textures)
+            )
+        )
     }
 
     // add mesh
-    entity.insert(Mesh(indexedCollection(
-        modelShader,
-        RenderShapeType.TRIANGLES,
-        ShortArray(indices.size) { indices[it].toShort() },
-        metadata("vertexPosition_modelspace", 3) to FloatBuffer(ARRAY_BUFFER, vertices),
-        metadata("vertexUV", 2) to FloatBuffer(ARRAY_BUFFER, textures),
-    )))
-    println("Complete assimp load!")
+    entity.insert(Mesh(collections))
 }

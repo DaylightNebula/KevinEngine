@@ -24,7 +24,7 @@ import kotlin.test.Test
 
 class TrainTestLoader {
     val info = AppInfo("ObjTest", clearColor = Float4(0f, 0f, 0f, 1f))
-    val texture = Texture("/SimpleTrains_Texture_01.png")
+    val texture = Texture("/barbarian_texture.png")
 
     @Test
     fun test() = run(
@@ -46,7 +46,7 @@ class TrainTestLoader {
                 // create camera
                 entity(
                     Camera(45f, 1280f / 720f, 0.1f, 100f),
-                    TransformComponent(position = Float3(-4f, -3f, -3f)).apply { lookAt(Float3(3f, 0f, 3f)) }
+                    TransformComponent(position = Float3(0f, -0.25f, -1f)).apply { lookAt(Float3(0f, -0.25f, 0f)) }
                 ).spawn()
             })
         )

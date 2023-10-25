@@ -76,7 +76,7 @@ internal val loadObjs = system {
             }
 
             // create a new mesh
-            val mesh = Mesh(
+            val mesh = mesh(
                 bufferCollection(
                     modelShader,
                     RenderShapeType.TRIANGLES,

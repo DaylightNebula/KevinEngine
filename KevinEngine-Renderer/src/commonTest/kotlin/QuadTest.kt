@@ -52,7 +52,7 @@ class QuadTest {
                 entity(
                     TransformComponent(scale = Float3(0.5f)),
                     VisibilityComponent(),
-                    Mesh(buffers),
+                    mesh(buffers),
                     Material(hashMapOf())
                 ).spawn()
 

@@ -27,7 +27,7 @@ class CubeTest {
                 entity(
                     TransformComponent(),
                     VisibilityComponent(),
-                    Mesh(cube),
+                    mesh(cube),
                     Material(hashMapOf())
                 ).spawn()
 

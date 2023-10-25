@@ -53,7 +53,7 @@ val loadGltfs = system {
             println("Uvs ${uvs.size / 2}")
             println("Indices ${indices.toList()}")
             // create a new mesh
-            val mesh = Mesh(
+            val mesh = mesh(
                 indexedCollection(
                     modelShader,
                     RenderShapeType.TRIANGLES,

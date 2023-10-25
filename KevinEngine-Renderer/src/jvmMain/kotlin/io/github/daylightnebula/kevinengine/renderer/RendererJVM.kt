@@ -27,7 +27,7 @@ actual fun drawIndexed(type: RenderShapeType, count: Int) = glDrawElements(
     when (type) {
         RenderShapeType.QUADS -> GL_TRIANGLE_FAN
         RenderShapeType.TRIANGLES -> GL_TRIANGLES
-    }, count, GL_UNSIGNED_SHORT, 0
+    }, count * 2, GL_UNSIGNED_SHORT, 0
 )
 
 // attaches the given buffer to be rendered
