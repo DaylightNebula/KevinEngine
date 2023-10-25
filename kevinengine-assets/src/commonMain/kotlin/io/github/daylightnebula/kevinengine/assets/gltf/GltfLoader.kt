@@ -55,7 +55,6 @@ val loadGltfs = system {
             // create a new mesh
             val mesh = mesh(
                 indexedCollection(
-                    modelShader,
                     RenderShapeType.TRIANGLES,
                     ShortArray(indices.size) { idx -> indices[idx].toShort() }.reversedArray(),
                     metadata("vertexPosition_modelspace", 3) to genBuffer(*positions.toFloatArray()),

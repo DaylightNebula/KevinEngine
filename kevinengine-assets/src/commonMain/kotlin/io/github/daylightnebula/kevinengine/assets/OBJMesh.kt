@@ -78,7 +78,6 @@ internal val loadObjs = system {
             // create a new mesh
             val mesh = mesh(
                 bufferCollection(
-                    modelShader,
                     RenderShapeType.TRIANGLES,
                     metadata("vertexPosition_modelspace", 3) to genBuffer(*finalVertices.toFloatArray()),
                     metadata("vertexUV", 2) to genBuffer(*finalUVs.toFloatArray())
