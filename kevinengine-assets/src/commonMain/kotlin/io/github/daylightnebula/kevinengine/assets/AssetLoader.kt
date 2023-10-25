@@ -72,8 +72,8 @@ fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
     entity.insert(Mesh(bufferCollection(
         modelShader,
         RenderShapeType.TRIANGLES,
-        metadata("position", 0, 3) to genBuffer(*positions),
-        metadata("uvs", 1, 2) to genBuffer(*uvs)
+        metadata("vertexPosition_modelspace", 3) to genBuffer(*positions),
+        metadata("vertexUV", 2) to genBuffer(*uvs)
     )))
 
 //    if (asset.textures.isNotEmpty()) {

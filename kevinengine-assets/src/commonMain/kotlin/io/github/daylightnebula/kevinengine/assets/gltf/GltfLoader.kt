@@ -27,7 +27,11 @@ val loadGltfs = system {
 
             // load buffers
             val initBuffers = Array(gltf.buffers.size) {
-                Base64.decode(gltf.buffers[it].uri?.substring("data:application/octet-stream;base64,".length) ?: "")
+                val uri = gltf.buffers[it].uri
+                val final = uri?.substring("data:application/octet-stream;base64,".length) ?: ""
+                println(uri)
+                println(final)
+                Base64.decode(final)
             }
             val buffers = Array(gltf.bufferViews.size) { idx ->
                 val view = gltf.bufferViews[idx]
@@ -35,54 +39,27 @@ val loadGltfs = system {
                 buffer.sliceArray(IntRange(view.byteOffset, view.byteOffset + view.byteLength - 1))
             }
 
-            // final lists for vertices, normals, and uvs
-            val fVertices = mutableListOf<Float>()
-            val fUvs = mutableListOf<Float>()
-
             // load meshes
-            val meshes = Array(gltf.meshes.size) { mIdx ->
-                val gltfMesh = gltf.meshes[mIdx]
+            val gltfMesh = gltf.meshes.first()
 
-                // get data from accessors
-                val primitive = gltfMesh.primitives.firstOrNull() ?: throw IllegalArgumentException("Only one primitive supported!")
-                val indices = gltf.accessors[primitive.indices!!].fromBuffers(buffers) as? Array<UShort> ?: throw IllegalArgumentException("Gltf indices must be array of ushort!")
-                val attributes = primitive.attributes.mapValues { (_, aIdx) -> gltf.accessors[aIdx] }
-                val positions = attributes["POSITION"]!!.fromBuffers(buffers) as? Array<Float3> ?: throw IllegalArgumentException("Gltf positions must be array of vec3!")
-                val uvs = attributes["TEXCOORD_0"]!!.fromBuffers(buffers) as? Array<Float2> ?: throw IllegalArgumentException("Gltf uvs must be array of vec2!")
+            // get data from accessors
+            val primitive = gltfMesh.primitives.firstOrNull() ?: throw IllegalArgumentException("Only one primitive supported!")
+            val indices = gltf.accessors[primitive.indices!!].fromBuffers(buffers) as? Array<UShort> ?: throw IllegalArgumentException("Gltf indices must be array of ushort!")
+            val attributes = primitive.attributes.mapValues { (_, aIdx) -> gltf.accessors[aIdx] }
+            val positions = attributes["POSITION"]!!.fromBuffers(buffers) as? Array<Float> ?: throw IllegalArgumentException("Gltf positions must be array of vec3!")
+            val uvs = attributes["TEXCOORD_0"]!!.fromBuffers(buffers) as? Array<Float> ?: throw IllegalArgumentException("Gltf uvs must be array of vec2!")
 
-                val addPosition: (pIdx: UShort) -> Unit = { pIdx ->
-                    val position = positions[pIdx.toInt()]
-                    fVertices.add(position.x)
-                    fVertices.add(position.y)
-                    fVertices.add(position.z)
-                }
-
-                val addUvs: (idx: UShort) -> Unit = { idx ->
-                    val uv = uvs[idx.toInt()]
-                    fUvs.add(uv.x)
-                    fUvs.add(uv.y)
-                }
-
-                // todo add to positions
-                // todo add to uvs
-                for (idx in indices.indices step 9) {
-                    addPosition(indices[idx])
-                    addUvs(indices[idx + 2])
-                    addPosition(indices[idx + 3])
-                    addUvs(indices[idx + 5])
-                    addPosition(indices[idx + 6])
-                    addUvs(indices[idx + 7])
-                }
-                println("Indices ${indices.size} : ${indices.toList().maxBy { it }} ${positions.size}")
-            }
-
+            println("Positions ${positions.size / 3}")
+            println("Uvs ${uvs.size / 2}")
+            println("Indices ${indices.toList()}")
             // create a new mesh
             val mesh = Mesh(
-                bufferCollection(
+                indexedCollection(
                     modelShader,
                     RenderShapeType.TRIANGLES,
-                    metadata("position", 0, 3) to genBuffer(*fVertices.toFloatArray()),
-                    metadata("uvs", 1, 2) to genBuffer(*fUvs.toFloatArray())
+                    ShortArray(indices.size) { idx -> indices[idx].toShort() }.reversedArray(),
+                    metadata("vertexPosition_modelspace", 3) to genBuffer(*positions.toFloatArray()),
+                    metadata("vertexUV", 2) to genBuffer(*uvs.toFloatArray())
                 )
             )
 
@@ -125,18 +102,19 @@ fun GltfAccessor.fromBuffers(buffers: Array<ByteArray>): Array<*> {
     // match converted to given type
     return when(type) {
         GltfAccessorType.SCALAR -> data
-        GltfAccessorType.VEC2 -> {
-            val data = data.safeFloats("Vec2")
-            Array(data.size / 2) { Float2(data[it * 2], data[it * 2 + 1]) }
-        }
-        GltfAccessorType.VEC3 -> {
-            val data = data.safeFloats("Vec3")
-            Array(data.size / 3) { Float3(data[it * 3], data[it * 3 + 1], data[it * 3 + 2]) }
-        }
-        GltfAccessorType.VEC4 -> {
-            val data = data.safeFloats("Vec4")
-            Array(data.size / 4) { Float4(data[it * 4], data[it * 4 + 1], data[it * 4 + 2], data[it * 4 + 3]) }
-        }
+        GltfAccessorType.VEC2, GltfAccessorType.VEC3, GltfAccessorType.VEC4 -> data.safeFloats("Vec to floats")
+//        GltfAccessorType.VEC2 -> {
+//            val data = data.safeFloats("Vec2")
+//            Array(data.size / 2) { Float2(data[it * 2], data[it * 2 + 1]) }
+//        }
+//        GltfAccessorType.VEC3 -> {
+//            val data = data.safeFloats("Vec3")
+//            Array(data.size / 3) { Float3(data[it * 3], data[it * 3 + 1], data[it * 3 + 2]) }
+//        }
+//        GltfAccessorType.VEC4 -> {
+//            val data = data.safeFloats("Vec4")
+//            Array(data.size / 4) { Float4(data[it * 4], data[it * 4 + 1], data[it * 4 + 2], data[it * 4 + 3]) }
+//        }
         GltfAccessorType.MAT2 -> {
             val data = data.safeFloats("Mat2")
             Array(data.size / 4) {

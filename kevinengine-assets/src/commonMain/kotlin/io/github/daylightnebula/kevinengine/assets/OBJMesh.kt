@@ -80,8 +80,8 @@ internal val loadObjs = system {
                 bufferCollection(
                     modelShader,
                     RenderShapeType.TRIANGLES,
-                    metadata("position", 0, 3) to genBuffer(*finalVertices.toFloatArray()),
-                    metadata("uvs", 1, 2) to genBuffer(*finalUVs.toFloatArray())
+                    metadata("vertexPosition_modelspace", 3) to genBuffer(*finalVertices.toFloatArray()),
+                    metadata("vertexUV", 2) to genBuffer(*finalUVs.toFloatArray())
                 )
             )
 

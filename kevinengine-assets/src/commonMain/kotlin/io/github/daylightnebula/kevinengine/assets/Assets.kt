@@ -17,8 +17,7 @@ data class Model(val path: String): Component
 val modelShader = ShaderProgram(
     "builtin_obj",
     "/model_vert.glsl",
-    "/model_frag.glsl",
-    listOf("mvp", "diffuse")
+    "/model_frag.glsl"
 )
 
 fun assets() = module(
