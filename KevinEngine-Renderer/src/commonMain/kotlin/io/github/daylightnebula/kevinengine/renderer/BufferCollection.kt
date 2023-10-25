@@ -1,17 +1,16 @@
 package io.github.daylightnebula.kevinengine.renderer
 
-fun bufferCollection(shader: ShaderProgram, renderShape: RenderShapeType, vararg buffers: Pair<BufferMetadata, Buffer>) =
-    BasicBufferCollection(shader, renderShape, mapOf(*buffers))
-fun indexedCollection(shader: ShaderProgram, shape: RenderShapeType, indices: ShortArray, vararg buffers: Pair<BufferMetadata, Buffer>) =
-    IndexedBufferCollection(shader, shape, indices, mapOf(*buffers))
+fun bufferCollection(renderShape: RenderShapeType, vararg buffers: Pair<BufferMetadata, Buffer>) =
+    BasicBufferCollection(renderShape, mapOf(*buffers))
+fun indexedCollection(shape: RenderShapeType, indices: ShortArray, vararg buffers: Pair<BufferMetadata, Buffer>) =
+    IndexedBufferCollection(shape, indices, mapOf(*buffers))
 
 interface BufferCollection {
-    val shader: ShaderProgram
-    fun render()
+    fun render(shader: ShaderProgram)
 }
 
-class BasicBufferCollection(override val shader: ShaderProgram, val shape: RenderShapeType, val buffers: Map<BufferMetadata, Buffer>): BufferCollection {
-    override fun render() {
+class BasicBufferCollection(val shape: RenderShapeType, val buffers: Map<BufferMetadata, Buffer>): BufferCollection {
+    override fun render(shader: ShaderProgram) {
         // load attributes
         buffers.entries.forEachIndexed { index, (metadata, buffer) ->
             if (!buffer.isInitialized) buffer.load()
@@ -35,14 +34,13 @@ class BasicBufferCollection(override val shader: ShaderProgram, val shape: Rende
 }
 
 class IndexedBufferCollection(
-    override val shader: ShaderProgram,
     val shape: RenderShapeType,
     val indices: ShortArray,
     val buffers: Map<BufferMetadata, Buffer>
 ): BufferCollection {
     val indicesBuffer = ShortBuffer(ELEMENT_ARRAY_BUFFER, indices)
 
-    override fun render() {
+    override fun render(shader: ShaderProgram) {
         if (!indicesBuffer.isInitialized) indicesBuffer.load()
 
         // load attributes
@@ -60,7 +58,7 @@ class IndexedBufferCollection(
         else {
             shader.use()
             bindBuffer(indicesBuffer.get(), ELEMENT_ARRAY_BUFFER)
-            drawIndexed(shape, buffers.values.first().size)
+            drawIndexed(shape, indices.size)
             clearBuffer(ELEMENT_ARRAY_BUFFER)
         }
 

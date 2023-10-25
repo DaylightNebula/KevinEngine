@@ -6,11 +6,14 @@ import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
 import io.github.daylightnebula.kevinengine.math.*
 
+// components
 val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
-data class Mesh(var collections: List<BufferCollection>): Component
-data class Material(val map: HashMap<String, Any>): Component
-fun mesh(vararg collections: BufferCollection) = Mesh(listOf(*collections))
+data class MeshNode(val transformation: Mat4, val collections: List<BufferCollection>, val children: List<MeshNode>)
+data class Mesh(val root: MeshNode): Component
+data class Material(val shader: ShaderProgram, val map: HashMap<String, Any>): Component
+fun mesh(vararg collections: BufferCollection) = Mesh(MeshNode(Mat4.identity(), listOf(*collections), listOf()))
 
+// cameras
 val cameraQuery = Query(Camera::class, TransformComponent::class)
 data class Camera(val fov: Float, val aspectRatio: Float, val near: Float, val far: Float): Component
 
@@ -37,12 +40,14 @@ fun renderer(info: AppInfo) = module(
             val matrix = perspectiveMatrix * viewMatrix * transform
 
             // get buffer collection and shader
-            val collections = (list[1] as Mesh).collections
-            val shader = collections.first().shader
-            shader.setUniformMat4("mvp", matrix)
+            val mesh = (list[1] as Mesh)
+            val rootNode = mesh.root
+            val collections = rootNode.collections
 
             // apply material (uniforms)
-            val materialMap = (list[0] as Material).map
+            val material = (list[0] as Material)
+            val materialMap = material.map
+            val shader = material.shader
             materialMap.forEach { (name, obj) ->
                 when(obj) {
                     is Float -> shader.setUniformFloat(name, obj)
@@ -55,11 +60,23 @@ fun renderer(info: AppInfo) = module(
             }
 
             // do draw
-            collections.forEach { c -> c.render() }
+            renderMeshNode(shader, rootNode, matrix)
         }
         endRender()
     })
 )
+
+fun renderMeshNode(shader: ShaderProgram, node: MeshNode, parentMatrix: Mat4) {
+    // set matrix
+    val matrix = parentMatrix * node.transformation
+    shader.setUniformMat4("mvp", matrix)
+
+    // render collections
+    node.collections.forEach { it.render(shader) }
+
+    // render children
+    node.children.forEach { renderMeshNode(shader, it, matrix) }
+}
 
 expect fun setupRenderer(info: AppInfo)
 expect fun startRender()

@@ -19,7 +19,6 @@ class QuadTest {
         "/quad_frag.glsl"
     )
     val buffers = bufferCollection(
-        shader,
         RenderShapeType.QUADS,
         metadata("vertexPosition_modelspace", 3) to genBuffer(
             -1f, -1f, 0f,
@@ -53,7 +52,7 @@ class QuadTest {
                     TransformComponent(scale = Float3(0.5f)),
                     VisibilityComponent(),
                     mesh(buffers),
-                    Material(hashMapOf())
+                    Material(shader, hashMapOf())
                 ).spawn()
 
                 entity(

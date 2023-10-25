@@ -23,7 +23,7 @@ class TexturedQuadTest {
     )
     val texture = Texture("/flowers.jpg")
     val buffers = indexedCollection(
-        shader, RenderShapeType.TRIANGLES,
+        RenderShapeType.TRIANGLES,
         shortArrayOf(0, 1, 2, 0, 2, 3),
         metadata("vertexPosition_modelspace", 3) to genBuffer(
             -1f, -1f, 0f,
@@ -58,7 +58,7 @@ class TexturedQuadTest {
                     TransformComponent(scale = Float3(0.5f)),
                     VisibilityComponent(),
                     mesh(buffers),
-                    Material(hashMapOf("tex0" to texture))
+                    Material(shader, hashMapOf("tex0" to texture))
                 ).spawn()
 
                 entity(

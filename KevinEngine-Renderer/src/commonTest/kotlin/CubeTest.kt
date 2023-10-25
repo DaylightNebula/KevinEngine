@@ -28,7 +28,7 @@ class CubeTest {
                     TransformComponent(),
                     VisibilityComponent(),
                     mesh(cube),
-                    Material(hashMapOf())
+                    Material(cubeShader, hashMapOf())
                 ).spawn()
 
                 // create camera
@@ -40,12 +40,12 @@ class CubeTest {
         )
     )
 
+    private val cubeShader = ShaderProgram(
+        "cube",
+        "/cube_vert.glsl",
+        "/cube_frag.glsl"
+    )
     private val cube = bufferCollection(
-        ShaderProgram(
-            "cube",
-            "/cube_vert.glsl",
-            "/cube_frag.glsl"
-        ),
         RenderShapeType.TRIANGLES,
         metadata("vertexPosition_modelspace", 3) to genBuffer(
             -1.0f,-1.0f,-1.0f,
