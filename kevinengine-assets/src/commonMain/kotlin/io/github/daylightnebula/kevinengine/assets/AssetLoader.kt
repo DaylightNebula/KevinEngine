@@ -18,35 +18,39 @@ val loadModelComponents = system {
     query.query().forEach { entity ->
         // grab and remove model component
         val model = entity.components.first { it is Model } as Model
-        val path = "../assets/${model.path}.kasset"
         entity.remove(Model::class)
-
-        // if this asset is loaded, apply it
-        if (loadedAssets.containsKey(path))
-            applyKAssetToEntity(entity, loadedAssets[path]!!, path)
-        else {
-            // add to apply assets list
-            var list = applyAssets[path]
-            if (list == null) {
-                list = mutableListOf()
-                applyAssets[path] = list
-            }
-            list.add(entity)
-
-            // if this asset is load being loaded, start async load
-            if (!loading.contains(path)) {
-                loading.add(path)
-                asyncBinFile(path) { text ->
-                    // deserialize and save new asset
-                    val asset = deserializeKAsset(text)
-                    loadedAssets[path] = asset
-
-                    // apply asset to all waiting entities
-                    applyAssets[path]?.forEach { entity -> applyKAssetToEntity(entity, asset, path) }
-                    applyAssets.remove(path)
-                }
-            }
+        asyncTextFile("/${model.path}.gltf") { text ->
+            loadAssimpAsset(entity, text)
         }
+//        val path = "../assets/${model.path}.kasset"
+//        entity.remove(Model::class)
+//
+//        // if this asset is loaded, apply it
+//        if (loadedAssets.containsKey(path))
+//            applyKAssetToEntity(entity, loadedAssets[path]!!, path)
+//        else {
+//            // add to apply assets list
+//            var list = applyAssets[path]
+//            if (list == null) {
+//                list = mutableListOf()
+//                applyAssets[path] = list
+//            }
+//            list.add(entity)
+//
+//            // if this asset is load being loaded, start async load
+//            if (!loading.contains(path)) {
+//                loading.add(path)
+//                asyncBinFile(path) { text ->
+//                    // deserialize and save new asset
+//                    val asset = deserializeKAsset(text)
+//                    loadedAssets[path] = asset
+//
+//                    // apply asset to all waiting entities
+//                    applyAssets[path]?.forEach { entity -> applyKAssetToEntity(entity, asset, path) }
+//                    applyAssets.remove(path)
+//                }
+//            }
+//        }
     }
 }
 
@@ -82,3 +86,5 @@ fun applyKAssetToEntity(entity: Entity, asset: KAsset, path: String) {
 //        println("Texture ${texture.rgbaTexture.toList()}")
 //    }
 }
+
+expect fun loadAssimpAsset(entity: Entity, text: String)
