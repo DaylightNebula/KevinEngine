@@ -5,6 +5,7 @@ import io.github.daylightnebula.kevinengine.math.Float3
 import io.github.daylightnebula.kevinengine.math.Float4
 import io.github.daylightnebula.kevinengine.math.Mat4
 import kotlinx.browser.window
+import org.khronos.webgl.Float32Array
 import org.khronos.webgl.WebGLProgram
 import org.khronos.webgl.WebGLShader
 import org.khronos.webgl.WebGLUniformLocation
@@ -150,6 +151,9 @@ actual class ShaderProgram actual constructor(actual val name: String, vertexPat
 
     actual fun setUniformMat4(name: String, value: Mat4) {
         if (isInitialized) gl.uniformMatrix4fv(getUniformLocation(name), false, value.toFloatArray().toTypedArray())
+    }
+    actual fun setUniformMat4Array(name: String, value: FloatArray) {
+        if (isInitialized) gl.uniformMatrix4fv(getUniformLocation(name), false, Float32Array(value.toTypedArray()))
     }
 
     actual fun setUniformTex(name: String, value: Texture) {

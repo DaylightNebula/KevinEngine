@@ -6,12 +6,20 @@ import io.github.daylightnebula.kevinengine.components.VisibilityComponent
 import io.github.daylightnebula.kevinengine.ecs.*
 import io.github.daylightnebula.kevinengine.math.*
 
+// mesh
+data class MeshNode(
+    val transformation: Mat4,
+    val collections: List<BufferCollection>,
+    val children: List<MeshNode>
+)
+class BoneAnimChannel()
+data class Bone(val offset: Mat4, val animChannels: HashMap<String, BoneAnimChannel>)
+data class Mesh(val root: MeshNode, val bones: HashMap<String, Bone>): Component
+
 // components
 val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
-data class MeshNode(val transformation: Mat4, val collections: List<BufferCollection>, val children: List<MeshNode>)
-data class Mesh(val root: MeshNode): Component
 data class Material(val shader: ShaderProgram, val map: HashMap<String, Any>): Component
-fun mesh(vararg collections: BufferCollection) = Mesh(MeshNode(Mat4.identity(), listOf(*collections), listOf()))
+fun mesh(vararg collections: BufferCollection) = Mesh(MeshNode(Mat4.identity(), listOf(*collections), listOf()), hashMapOf())
 
 // cameras
 val cameraQuery = Query(Camera::class, TransformComponent::class)
@@ -58,6 +66,16 @@ fun renderer(info: AppInfo) = module(
                     is Texture -> shader.setUniformTex(name, obj)
                 }
             }
+
+            // generate bone matrices
+            val boneMatArray = FloatArray(16 * 100)
+            mesh.bones.values.forEachIndexed { idx, bone ->
+                val array = bone.offset.toFloatArrayColumnAligned()
+                repeat(16) { idx2 ->
+                    boneMatArray[idx * 16 + idx2] = array[idx2]
+                }
+            }
+            shader.setUniformMat4Array("bones[0]", boneMatArray)
 
             // do draw
             renderMeshNode(shader, rootNode, matrix)
