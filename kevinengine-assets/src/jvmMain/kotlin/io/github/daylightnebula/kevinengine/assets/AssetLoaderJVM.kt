@@ -1,9 +1,7 @@
 package io.github.daylightnebula.kevinengine.assets
 
 import io.github.daylightnebula.kevinengine.ecs.Entity
-import io.github.daylightnebula.kevinengine.math.Float4
-import io.github.daylightnebula.kevinengine.math.Int4
-import io.github.daylightnebula.kevinengine.math.Mat4
+import io.github.daylightnebula.kevinengine.math.*
 import io.github.daylightnebula.kevinengine.renderer.*
 import org.lwjgl.assimp.*
 import org.lwjgl.system.MemoryUtil
@@ -31,7 +29,7 @@ actual fun loadAssimpAsset(entity: Entity, text: String, type: String) {
     ) ?: throw IllegalStateException("Failed to load assimp scene!")
     MemoryUtil.memFree(data)
 
-    val bones = hashMapOf<String, Bone>()
+    val bones = mutableListOf<Bone>()
 
     // load meshes
     val numMeshes = scene.mNumMeshes()
@@ -43,16 +41,18 @@ actual fun loadAssimpAsset(entity: Entity, text: String, type: String) {
 
     // todo load animation info
     val aiAnimations = scene.mAnimations()
+    val animations = hashMapOf<String, Animation>()
     while (aiAnimations != null && aiAnimations.remaining() > 0) {
         val aiAnimation = AIAnimation.create(aiAnimations.get())
-        loadAnimation(aiAnimation, bones)
+        val pair = loadAnimation(aiAnimation)
+        animations[pair.first] = pair.second
     }
 
     // add mesh
-    entity.insert(Mesh(rootNode, bones))
+    entity.insert(Mesh(rootNode, bones, animations))
 }
 
-fun loadMesh(mesh: AIMesh, bones: HashMap<String, Bone>): IndexedBufferCollection {
+fun loadMesh(mesh: AIMesh, bones: MutableList<Bone>): IndexedBufferCollection {
     // process vertices
     val vertices = FloatArray(mesh.mNumVertices() * 3)
     val aiVertices = mesh.mVertices()
@@ -96,7 +96,7 @@ fun loadMesh(mesh: AIMesh, bones: HashMap<String, Bone>): IndexedBufferCollectio
     while(aiBones != null && aiBones.remaining() > 0) {
         // get and save bone
         val bone = AIBone.create(aiBones.get())
-        bones[bone.mName().dataString()] = Bone(bone.mOffsetMatrix().toMat4(), hashMapOf())
+        bones.add(Bone(bone.mName().dataString(), bone.mOffsetMatrix().toMat4()))
         val boneID = bones.size - 1
 
         // apply weights
@@ -141,18 +141,26 @@ fun loadNodes(node: AINode, meshes: Array<IndexedBufferCollection>): MeshNode {
     while(aiChildren != null && aiChildren.remaining() > 0) children.add(loadNodes(AINode.create(aiChildren.get()), meshes))
 
     // create final node
-    return MeshNode(node.mTransformation().toMat4(), collections, children)
+    return MeshNode(node.mName().dataString(), node.mTransformation().toMat4(), collections, children)
 }
 
-fun loadAnimation(anim: AIAnimation, bones: HashMap<String, Bone>) {
+fun loadAnimation(anim: AIAnimation): Pair<String, Animation> {
     println("Animation ${anim.mName().dataString()} Channels: ${anim.mNumChannels()} Duration: ${anim.mDuration()} Ticks: ${anim.mTicksPerSecond()}")
-    val channels = anim.mChannels()
-    while (channels != null && channels.remaining() > 0) loadChannel(AINodeAnim.create(channels.get()), bones)
+    val aiChannels = anim.mChannels()
+    val channels = hashMapOf<String, AnimationChannel>()
+    while (aiChannels != null && aiChannels.remaining() > 0) {
+        val pair = loadChannel(AINodeAnim.create(aiChannels.get()))
+        channels[pair.first] = pair.second
+    }
+    return anim.mName().dataString() to Animation(channels)
 }
 
-fun loadChannel(channel: AINodeAnim, bones: HashMap<String, Bone>) {
-    println(" - ${channel.mNodeName().dataString()}")
-}
+fun loadChannel(channel: AINodeAnim): Pair<String, AnimationChannel> =
+    channel.mNodeName().dataString() to AnimationChannel(
+        channel.mPositionKeys()?.map { key -> key.mValue().toFloat3() to key.mTime() } ?: listOf(),
+        channel.mRotationKeys()?.map { key -> key.mValue().toQuaternion() to key.mTime() } ?: listOf(),
+        channel.mScalingKeys()?.map { key -> key.mValue().toFloat3() to key.mTime() } ?: listOf(),
+    )
 
 fun IntArray.indexInRangeWithCondition(range: IntRange, cond: (value: Int) -> Boolean): Int? {
     range.forEach { idx -> if (cond(this[idx])) return idx }
@@ -178,3 +186,6 @@ fun AIMatrix4x4.toMat4(): Mat4 = Mat4(
     Float4(this.a3(), this.b3(), this.c3(), this.d3()),
     Float4(this.a4(), this.b4(), this.c4(), this.d4())
 )
+
+fun AIVector3D.toFloat3() = Float3(x(), y(), z())
+fun AIQuaternion.toQuaternion() = Quaternion(x(), y(), z(), w())
