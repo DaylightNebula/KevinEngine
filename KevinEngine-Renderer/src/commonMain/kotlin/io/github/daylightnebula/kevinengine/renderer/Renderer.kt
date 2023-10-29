@@ -20,13 +20,13 @@ class AnimationChannel(
     val rotations: List<Pair<Quaternion, Double>>,
     val scales: List<Pair<Float3, Double>>,
 )
-data class Bone(val name: String, val offset: Mat4, private var matrix: Mat4 = Mat4.identity())
-data class Mesh(val root: MeshNode, val bones: List<Bone>, val animations: HashMap<String, Animation>): Component
+data class Bone(val id: Int, val offset: Mat4, private var matrix: Mat4 = Mat4.identity())
+data class Mesh(val root: MeshNode, val bones: HashMap<String, Bone>, val animations: HashMap<String, Animation>): Component
 
 // components
 val meshQuery = Query(Material::class, Mesh::class, TransformComponent::class, VisibilityComponent::class)
 data class Material(val shader: ShaderProgram, val map: HashMap<String, Any>): Component
-fun mesh(vararg collections: BufferCollection) = Mesh(MeshNode("", Mat4.identity(), listOf(*collections), listOf()), listOf(), hashMapOf())
+fun mesh(vararg collections: BufferCollection) = Mesh(MeshNode("", Mat4.identity(), listOf(*collections), listOf()), hashMapOf(), hashMapOf())
 
 // cameras
 val cameraQuery = Query(Camera::class, TransformComponent::class)
@@ -75,22 +75,24 @@ fun renderer(info: AppInfo) = module(
             }
 
             // generate bone matrices
-            val boneMatArray = FloatArray(16 * 100)
-            val animation = mesh.animations["2H_Melee_Idle"]!!
-            mesh.bones.forEachIndexed { idx, bone ->
-                val channel = animation.channels[bone.name]!!
-                val position = channel.positions.first().first
-                val rotation = channel.rotations.first().first
-                val scale = channel.scales.first().first
-                val matrix = scale(scale) * rotation(rotation) * translation(position)
-
-//                val array = bone.offset.toFloatArrayColumnAligned()
-                val array = matrix.toFloatArrayColumnAligned()
-                repeat(16) { idx2 ->
-                    boneMatArray[idx * 16 + idx2] = array[idx2]
-                }
-            }
-            shader.setUniformMat4Array("bones[0]", boneMatArray)
+//            val boneMatArray = FloatArray(16 * 100)
+//            val animation = mesh.animations["2H_Melee_Idle"]!!
+//            mesh.bones.values.forEachIndexed { idx, bone ->
+////                val channel = animation.channels[bone.name]!!
+////                val position = channel.positions.first().first
+////                val rotation = channel.rotations.first().first
+////                val scale = channel.scales.first().first
+////                val matrix = scale(scale) * rotation(rotation) * translation(position)
+//
+////                val array = bone.offset.toFloatArrayColumnAligned()
+////                val array = matrix.toFloatArrayColumnAligned()
+////                val array = (matrix * bone.offset).toFloatArrayColumnAligned()
+//                val array = Mat4.identity().toFloatArrayColumnAligned()
+//                repeat(16) { idx2 ->
+//                    boneMatArray[idx * 16 + idx2] = array[idx2]
+//                }
+//            }
+//            shader.setUniformMat4Array("bones[0]", boneMatArray)
 
             // do draw
             renderMeshNode(shader, rootNode, matrix)

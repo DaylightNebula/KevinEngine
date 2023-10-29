@@ -29,7 +29,7 @@ actual fun loadAssimpAsset(entity: Entity, text: String, type: String) {
     ) ?: throw IllegalStateException("Failed to load assimp scene!")
     MemoryUtil.memFree(data)
 
-    val bones = mutableListOf<Bone>()
+    val bones = hashMapOf<String, Bone>()
 
     // load meshes
     val numMeshes = scene.mNumMeshes()
@@ -52,7 +52,7 @@ actual fun loadAssimpAsset(entity: Entity, text: String, type: String) {
     entity.insert(Mesh(rootNode, bones, animations))
 }
 
-fun loadMesh(mesh: AIMesh, bones: MutableList<Bone>): IndexedBufferCollection {
+fun loadMesh(mesh: AIMesh, bones: HashMap<String, Bone>): IndexedBufferCollection {
     // process vertices
     val vertices = FloatArray(mesh.mNumVertices() * 3)
     val aiVertices = mesh.mVertices()
@@ -96,8 +96,8 @@ fun loadMesh(mesh: AIMesh, bones: MutableList<Bone>): IndexedBufferCollection {
     while(aiBones != null && aiBones.remaining() > 0) {
         // get and save bone
         val bone = AIBone.create(aiBones.get())
-        bones.add(Bone(bone.mName().dataString(), bone.mOffsetMatrix().toMat4()))
-        val boneID = bones.size - 1
+        val boneID = bones.size
+        bones[bone.mName().dataString()] = Bone(boneID, bone.mOffsetMatrix().toMat4())
 
         // apply weights
         val aiWeights = bone.mWeights()
@@ -124,8 +124,8 @@ fun loadMesh(mesh: AIMesh, bones: MutableList<Bone>): IndexedBufferCollection {
         RenderShapeType.TRIANGLES, indices,
         metadata("vertexPosition_modelspace", 3) to FloatBuffer(ARRAY_BUFFER, vertices),
         metadata("vertexUV", 2) to FloatBuffer(ARRAY_BUFFER, textures),
-        metadata("boneIDs", 4) to IntBuffer(ARRAY_BUFFER, vertexBoneIDs),
-        metadata("boneWeights", 4) to FloatBuffer(ARRAY_BUFFER, vertexWeights)
+//        metadata("boneIDs", 4) to IntBuffer(ARRAY_BUFFER, vertexBoneIDs),
+//        metadata("boneWeights", 4) to FloatBuffer(ARRAY_BUFFER, vertexWeights)
     )
 }
 
@@ -141,11 +141,11 @@ fun loadNodes(node: AINode, meshes: Array<IndexedBufferCollection>): MeshNode {
     while(aiChildren != null && aiChildren.remaining() > 0) children.add(loadNodes(AINode.create(aiChildren.get()), meshes))
 
     // create final node
+    println("Node ${node.mName().dataString()}")
     return MeshNode(node.mName().dataString(), node.mTransformation().toMat4(), collections, children)
 }
 
 fun loadAnimation(anim: AIAnimation): Pair<String, Animation> {
-    println("Animation ${anim.mName().dataString()} Channels: ${anim.mNumChannels()} Duration: ${anim.mDuration()} Ticks: ${anim.mTicksPerSecond()}")
     val aiChannels = anim.mChannels()
     val channels = hashMapOf<String, AnimationChannel>()
     while (aiChannels != null && aiChannels.remaining() > 0) {
